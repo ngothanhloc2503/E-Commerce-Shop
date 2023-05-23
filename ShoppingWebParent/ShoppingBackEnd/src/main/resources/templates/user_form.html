@@ -67,7 +67,7 @@
         </div>
 
         <form th:action="@{/users/save}" method="post" style="max-width: 800px; margin: auto"
-            th:object="${user}">
+            th:object="${user}" onsubmit="return checkEmailUnique(this)">
             <div class="border border-2 rounded p-4">
                 <div class="mb-3 row">
                     <label class="col-sm-4 col-form-label">E-mail:</label>
@@ -126,6 +126,25 @@
             </div>
         </form>
 
+        <div class="modal fade text-center" id="modalDialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalTitle">Warning</h4>
+                        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <span id="modalBody"></span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="text-center mt-4">
             <p>Shopping Control Panel - Copyright &copy; Shopping</p>
         </div>
@@ -137,5 +156,32 @@
                 window.location = "[[@{/users}]]"
             })
         })
+
+        function checkEmailUnique(form) {
+            url = "[[@{/users/check_email}]]";
+            userEmail = $("#email").val();
+            csrf = $("input[name='_csrf']").val();
+            params = { email: userEmail, _csrf: csrf};
+
+            $.post(url, params, function (response) {
+                if (response == "OK") {
+                    form.submit();
+                } else if (response = "Duplicated") {
+                    showModalDialog("Warning", "There is another user having email " + userEmail);
+                } else {
+                    showModalDialog("Error", "Unknown response from the server");
+                }
+            }).fail(function () {
+                showModalDialog("Error", "Could connect to the server");
+            });
+
+            return false;
+        }
+        
+        function showModalDialog(title, message) {
+            $('#modalTitle').text(title);
+            $('#modalBody').text(message);
+            $('#modalDialog').modal('show');
+        }
     </script>
 </html>
