@@ -119,6 +119,45 @@
             </table>
         </div>
 
+        <div class="text-center mb-3" th:if="${totalItems > 0}">
+            <span>Showing user # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+        </div>
+        <div class="text-center mb-3" th:if="${totalItems == 0}">
+            <span>No users found</span>
+        </div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{/users/page/1}" aria-label="First">
+                        <span aria-hidden="true">&Ll;</span>
+                    </a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li th:class="${currentPage != i ? 'page-item' : 'page-item active' }"
+                    th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a>
+                </li>
+
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${currentPage + 1}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${totalPages}}" aria-label="Last">
+                        <span aria-hidden="true">&Gg;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
         <div class="modal fade text-center" id="confirmModel">
             <div class="modal-dialog">
                 <div class="modal-content">

@@ -4,12 +4,16 @@ import com.shopping.admin.FileUploadUtil;
 import com.shopping.common.entity.Role;
 import com.shopping.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,18 +22,38 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService service;
+    private UserService userService;
 
     @GetMapping("/users")
     public String listAll(Model model) {
-        List<User> listUsers = service.listUser();
+        return listByPage(1, model);
+    }
+
+    @GetMapping("/users/page/{pageNum}")
+    public String listByPage(@PathVariable("pageNum") int pageNum, Model model) {
+        Page<User> page = userService.listByPage(pageNum);
+        List<User> listUsers = page.getContent();
+
+        long startCount = (pageNum - 1) * userService.USER_PER_PAGE + 1;
+        long endCount = startCount + userService.USER_PER_PAGE - 1;
+
+        if (endCount > page.getTotalElements()) {
+            endCount = page.getTotalElements();
+        }
+
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("listUsers", listUsers);
+
         return "users";
     }
 
     @GetMapping("/users/new")
     public String newUser(Model model) {
-        List<Role> listRoles = service.listRole();
+        List<Role> listRoles = userService.listRole();
         User user = new User();
         user.setEnabled(true);
         model.addAttribute("user", user);
@@ -46,7 +70,7 @@ public class UserController {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             user.setPhotos(fileName);
 
-            User savedUser = service.save(user);
+            User savedUser = userService.save(user);
 
             String uploadDir = "user-photos/" + savedUser.getId();
 
@@ -54,7 +78,7 @@ public class UserController {
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
-            service.save(user);
+            userService.save(user);
         }
 
         redirectAttributes.addFlashAttribute("message", "The user has been saved successfully.");
@@ -67,8 +91,8 @@ public class UserController {
                            Model model,
                            RedirectAttributes redirectAttributes) {
         try {
-            List<Role> listRoles = service.listRole();
-            User user = service.getUserById(id);
+            List<Role> listRoles = userService.listRole();
+            User user = userService.getUserById(id);
             model.addAttribute("user", user);
             model.addAttribute("listRoles", listRoles);
             model.addAttribute("pageTitle", "Edit User (ID: " + id + ")");
@@ -85,7 +109,7 @@ public class UserController {
                              Model model,
                              RedirectAttributes redirectAttributes) {
         try {
-            service.delete(id);
+            userService.delete(id);
             redirectAttributes.addFlashAttribute("message",
                     "The user ID " + id + " has been deleted successfully");
         } catch (UserNotFoundException e) {
@@ -98,11 +122,13 @@ public class UserController {
     public String updateUserEnabledStatus(@PathVariable(name = "id") Integer id,
                                           @PathVariable(name = "status") boolean enabled,
                                           RedirectAttributes redirectAttributes) {
-        service.updateUserEnabledStatus(id, enabled);
+        userService.updateUserEnabledStatus(id, enabled);
         String status = enabled ? "enabled" : "disabled";
         String message = "The user ID " + id + " has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 
         return "redirect:/users";
     }
+
+
 }
