@@ -3,6 +3,7 @@ package com.shopping.admin.user;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.common.entity.Role;
 import com.shopping.common.entity.User;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -145,5 +146,15 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/users/export/csv")
+    public void exportToCSV(HttpServletResponse response) {
+        List<User> listUsers = userService.listUser();
+        UserCsvExporter exporter = new UserCsvExporter();
+        try {
+            exporter.export(listUsers, response);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
 
+    }
 }
