@@ -147,14 +147,16 @@ public class UserController {
     }
 
     @GetMapping("/users/export/csv")
-    public void exportToCSV(HttpServletResponse response) {
+    public void exportToCSV(HttpServletResponse response) throws IOException {
         List<User> listUsers = userService.listUser();
         UserCsvExporter exporter = new UserCsvExporter();
-        try {
-            exporter.export(listUsers, response);
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        exporter.export(listUsers, response);
+    }
 
+    @GetMapping("/users/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        List<User> listUsers = userService.listUser();
+        UserExcelExporter exporter = new UserExcelExporter();
+        exporter.export(listUsers, response);
     }
 }
