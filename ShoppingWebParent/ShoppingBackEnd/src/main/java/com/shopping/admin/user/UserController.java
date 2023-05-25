@@ -93,7 +93,12 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("message", "The user has been saved successfully.");
 
-        return "redirect:/users";
+        return getRedirectURLtoAffectedUser(user);
+    }
+
+    private static String getRedirectURLtoAffectedUser(User user) {
+        String firstPathOfEmail = user.getEmail().split("@")[0];
+        return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword=" + firstPathOfEmail;
     }
 
     @GetMapping("/users/edit/{id}")
