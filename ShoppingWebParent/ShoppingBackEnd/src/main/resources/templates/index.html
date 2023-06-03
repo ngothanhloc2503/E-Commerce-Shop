@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
@@ -7,11 +8,16 @@
     <title>Home - Shopping Admin</title>
 
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </head>
 <body>
     <div>
+        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+            <input type="submit" />
+        </form>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-0">
             <a class="navbar-brand ms-3" th:href="@{/}">
                 <img th:src="@{/images/logo.png}">
@@ -54,6 +60,16 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/setting}">Setting</a>
                     </li>
+                    <li>
+                        <span class="fa fa-user fa-2x icon-silver"></span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                           sec:authentication="principal.fullname">123</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" id="logoutLink" href="">Logout</a>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -69,5 +85,13 @@
         <p>Shopping Control Panel - Copyright &copy; Shopping</p>
     </div>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#logoutLink").on("click", function (e) {
+            e.preventDefault();
+            document.logoutForm.submit();
+        })
+    })
+</script>
 </body>
 </html>
