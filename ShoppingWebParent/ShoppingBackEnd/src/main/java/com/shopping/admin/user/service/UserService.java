@@ -1,5 +1,8 @@
-package com.shopping.admin.user;
+package com.shopping.admin.user.service;
 
+import com.shopping.admin.user.UserNotFoundException;
+import com.shopping.admin.user.repository.RoleRepository;
+import com.shopping.admin.user.repository.UserRepository;
 import com.shopping.common.entity.Role;
 import com.shopping.common.entity.User;
 import jakarta.transaction.Transactional;
@@ -27,6 +30,10 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
 
     public List<User> listUser() {
         return (List<User>) userRepository.findAll();
@@ -63,6 +70,23 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    public User updateAccount(User userInForm) {
+        User userInDB = userRepository.findById(userInForm.getId()).get();
+
+        if (!userInForm.getPassword().isEmpty()) {
+            userInDB.setPassword(userInDB.getPassword());
+        }
+
+        if (userInForm.getPhotos() != null) {
+            userInDB.setPhotos(userInForm.getPhotos());
+        }
+
+        userInDB.setFirstname(userInForm.getFirstname());
+        userInDB.setLastname(userInForm.getLastname());
+
+        return userRepository.save(userInDB);
     }
 
     private void encodePassword(User user) {

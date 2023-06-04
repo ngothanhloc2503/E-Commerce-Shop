@@ -1,5 +1,6 @@
-package com.shopping.admin.user;
+package com.shopping.admin.user.controller;
 
+import com.shopping.admin.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PostMapping;

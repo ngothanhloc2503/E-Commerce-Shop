@@ -1,6 +1,6 @@
 package com.shopping.admin.security;
 
-import com.shopping.admin.user.UserRepository;
+import com.shopping.admin.user.repository.UserRepository;
 import com.shopping.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

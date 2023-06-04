@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ShoppingUserDetails implements UserDetails {
-
     private User user;
+
 
     public ShoppingUserDetails(User user) {
         this.user = user;
@@ -22,13 +22,14 @@ public class ShoppingUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> roles = user.getRoles();
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        for (Role role: roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        List<SimpleGrantedAuthority> authories = new ArrayList<>();
+
+        for (Role role : roles) {
+            authories.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return authorities;
+        return authories;
     }
 
     @Override
@@ -62,6 +63,15 @@ public class ShoppingUserDetails implements UserDetails {
     }
 
     public String getFullName() {
-        return this.user.getFullName();
+        return this.user.getFirstname() + " " + this.user.getLastname();
     }
+
+    public void setFirstName(String firstName) {
+        this.user.setFirstname(firstName);
+    }
+
+    public void setLastName(String lastName) {
+        this.user.setLastname(lastName);
+    }
+
 }

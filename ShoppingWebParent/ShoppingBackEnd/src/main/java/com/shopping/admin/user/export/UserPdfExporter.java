@@ -1,8 +1,7 @@
-package com.shopping.admin.user;
+package com.shopping.admin.user.export;
 
 import com.lowagie.text.Font;
 import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfCell;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;

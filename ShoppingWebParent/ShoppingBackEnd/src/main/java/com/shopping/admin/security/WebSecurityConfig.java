@@ -25,6 +25,7 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
@@ -45,8 +46,9 @@ public class WebSecurityConfig {
                 .and().logout().permitAll()
                 .and()
                     .rememberMe()
-                        .key("E_Commerce_Shopping")
-                        .tokenValiditySeconds(30 * 24 * 60 * 60); // 1 month
+                    .key("E_Commerce_Shopping")
+                    .tokenValiditySeconds(30 * 24 * 60 * 60) // 1 month
+                .and().authenticationProvider(authenticationProvider());
         return http.build();
     }
 

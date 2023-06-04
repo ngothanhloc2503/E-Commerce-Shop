@@ -1,5 +1,6 @@
 package com.shopping.admin.user;
 
+import com.shopping.admin.user.repository.UserRepository;
 import com.shopping.common.entity.Role;
 import com.shopping.common.entity.User;
 import org.junit.jupiter.api.Test;

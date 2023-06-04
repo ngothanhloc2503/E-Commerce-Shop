@@ -1,4 +1,4 @@
-package com.shopping.admin.user;
+package com.shopping.admin.user.repository;
 
 import com.shopping.common.entity.User;
 import org.springframework.data.domain.Page;
