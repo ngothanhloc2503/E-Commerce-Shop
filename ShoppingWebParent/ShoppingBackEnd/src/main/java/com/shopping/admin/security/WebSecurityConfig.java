@@ -42,7 +42,11 @@ public class WebSecurityConfig {
                     .loginPage("/login")
                     .usernameParameter("email")
                     .permitAll()
-                .and().logout().permitAll();
+                .and().logout().permitAll()
+                .and()
+                    .rememberMe()
+                        .key("E_Commerce_Shopping")
+                        .tokenValiditySeconds(30 * 24 * 60 * 60); // 1 month
         return http.build();
     }
 
