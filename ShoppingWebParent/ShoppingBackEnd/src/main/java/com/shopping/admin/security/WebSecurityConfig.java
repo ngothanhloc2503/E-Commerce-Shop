@@ -2,7 +2,10 @@ package com.shopping.admin.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -13,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
     @Bean
@@ -25,18 +29,40 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//        authProvider.setUserDetailsService(userDetailsService());
+//        authProvider.setPasswordEncoder(passwordEncoder());
+//
+//        return authProvider;
+//    }
 
-        return authProvider;
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(authenticationProvider());
+//    }
+
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http)
+            throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(new ShoppingUserDetailsService())
+                .passwordEncoder(new BCryptPasswordEncoder())
+                .and()
+                .build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .requestMatchers("/users/**", "/settings/**").hasAuthority("Admin")
+                .requestMatchers("/categories/**", "/brands/**", "/articles/**", "/menus/**")
+                    .hasAnyAuthority("Admin", "Editor")
+                .requestMatchers("/products/**").hasAnyAuthority("Admin", "Salesperson", "Editor", "Shipper")
+                .requestMatchers("/customers/**", "/shipping/**", "/reports/**")
+                    .hasAnyAuthority("Admin", "Salesperson")
+                .requestMatchers("/orders/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -47,8 +73,7 @@ public class WebSecurityConfig {
                 .and()
                     .rememberMe()
                     .key("E_Commerce_Shopping")
-                    .tokenValiditySeconds(30 * 24 * 60 * 60) // 1 month
-                .and().authenticationProvider(authenticationProvider());
+                    .tokenValiditySeconds(30 * 24 * 60 * 60); // 1 month
         return http.build();
     }
 

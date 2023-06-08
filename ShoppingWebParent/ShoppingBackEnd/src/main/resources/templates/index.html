@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments :: page_head('Home - Shopping Admin')"></head>
 <body>
     <div th:replace="navigation :: menu"></div>
@@ -9,7 +9,8 @@
         <h2>Shopme Control Panel</h2>
         Welcome
         <a th:href="@{/account}"
-           sec:authentication="principal.fullname"></a>
+           sec:authentication="principal.fullName"></a>
+        &nbsp;
         <span sec:authentication="principal.authorities"></span>
     </div>
 
