@@ -17,6 +17,5 @@ public class MainController {
         return "login";
     }
 
-//    @PostMapping("/logout")
-//    public String vew
+
 }

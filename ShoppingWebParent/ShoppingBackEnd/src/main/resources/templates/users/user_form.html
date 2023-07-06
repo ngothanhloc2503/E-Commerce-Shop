@@ -3,9 +3,9 @@
 <head th:replace="fragments :: page_head(${pageTitle})"></head>
 <body>
 
-<div th:replace="navigation :: menu"></div>
+    <div th:replace="navigation :: menu"></div>
 
-<div class="container-fluid">
+    <div class="container-fluid">
         <div>
             <h2>Manage Users | [[${pageTitle}]]</h2>
         </div>
@@ -112,7 +112,7 @@
 
             return false;
         }
-        
+
         function showModalDialog(title, message) {
             $('#modalTitle').text(title);
             $('#modalBody').text(message);
