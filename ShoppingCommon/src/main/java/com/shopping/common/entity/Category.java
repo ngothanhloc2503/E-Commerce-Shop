@@ -1,6 +1,7 @@
 package com.shopping.common.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +48,24 @@ public class Category {
         return copyCategory;
     }
 
+    public static Category copyFull(Category category) {
+        Category copyCategory = new Category();
+        copyCategory.setId(category.getId());
+        copyCategory.setName(category.getName());
+        copyCategory.setImage(category.getImage());
+        copyCategory.setAlias(category.getAlias());
+        copyCategory.setEnabled(category.isEnabled());
+
+        return copyCategory;
+    }
+
+    public static Category copyFull(Category category, String name) {
+        Category copyCategory = Category.copyFull(category);
+        copyCategory.setName(name);
+
+        return copyCategory;
+    }
+
     public Category(String name) {
         this.name = name;
         this.alias = name;
@@ -77,7 +96,8 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent")
+    @OrderBy("name asc")
     private Set<Category> children = new HashSet<>();
 
     public Integer getId() {
@@ -134,5 +154,11 @@ public class Category {
 
     public void setChildren(Set<Category> children) {
         this.children = children;
+    }
+
+    @Transient
+    public String getImagePath() {
+        if (this.id == null) return "/images/image_thumbnail.png";
+        return "/category-images/" + this.id + "/" + this.image;
     }
 }
