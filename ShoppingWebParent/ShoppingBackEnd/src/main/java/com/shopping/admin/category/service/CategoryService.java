@@ -107,4 +107,30 @@ public class CategoryService {
             listSubCategoriesUsedInForm(categoriesUsedInForm, subCategory, newSubLevel);
         }
     }
+
+    public String checkUnique(Integer id, String name, String alias) {
+        boolean isCreatingNew = (id == null || id == 0);
+
+        Category categoryByName = categoryRepository.findByName(name);
+        Category categoryByAlias = categoryRepository.findByAlias(alias);
+
+        if (isCreatingNew) {
+            if (categoryByName != null) {
+                return "DuplicateName";
+            }
+            if (categoryByAlias != null) {
+                return "DuplicateAlias";
+            }
+        }
+        else {
+            if (categoryByName != null && categoryByName.getId() != id) {
+                return "DuplicateName";
+            }
+            if (categoryByName != null && categoryByAlias.getId() != id) {
+                return "DuplicateAlias";
+            }
+        }
+
+        return "OK";
+    }
 }
