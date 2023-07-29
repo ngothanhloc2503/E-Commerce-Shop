@@ -28,6 +28,26 @@
         [[${label}]]
     </a>
 
+    <div th:fragment="category_status">
+        <a th:if="${category.enabled == true}" class="fa-solid fa-circle-check fa-lg icon-green"
+           th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
+           title="Disable this category" style="text-decoration:none"></a>
+        <a th:if="${category.enabled == false}" class="fa-solid fa-circle fa-lg icon-dark"
+           th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
+           title="Enable this category" style="text-decoration:none"></a>
+    </div>
+
+    <div th:fragment="category_actions" th:remove="tag">
+        <a class="fa-solid fa-pen-to-square fa-lg icon-green" th:href="@{'/categories/edit/' + ${category.id}}"
+           title="Edit this user" style="text-decoration:none"></a>
+        &nbsp;
+        <th:block th:if="${category.hasChildren == false}">
+        <a class="fa-solid fa-trash icon-dark fa-lg link-delete" th:href="@{'/categories/delete/' + ${category.id}}"
+           th:entityId="${category.id}"
+           title="Delete this user" style="text-decoration:none"></a>
+        </th:block>
+    </div>
+
     <div th:fragment="page_footer" class="text-center mt-4">
         <p>Shopping Control Panel - Copyright &copy; Shopping</p>
     </div>

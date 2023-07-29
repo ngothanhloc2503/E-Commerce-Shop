@@ -163,4 +163,17 @@ public class CategoryService {
 
         return  sortedChildren;
     }
+
+    public void updateCategoryEnabledStatus(Integer id, boolean enabled) {
+        categoryRepository.updateCategoryEnabledStatus(id, enabled);
+    }
+
+    public void delete(Integer id) throws CategoryNotFoundException {
+        Long countById = categoryRepository.countById(id);
+        if (countById == null || countById == 0) {
+            throw new CategoryNotFoundException("Could not find any category with id " + id);
+        }
+
+        categoryRepository.deleteById(id);
+    }
 }
