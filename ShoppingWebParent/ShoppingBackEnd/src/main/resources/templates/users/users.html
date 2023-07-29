@@ -17,23 +17,7 @@
             <a th:href="@{/users/export/pdf}" class="fa-solid fa-file-pdf fa-2xl icon-dark" style="text-decoration:none"></a>
         </div>
 
-        <div>
-            <form th:action="@{/users/page/1}" class="m-3" style="display: inline-block; width: auto; vertical-align: middle;">
-                Filter:&nbsp;
-                <input type="hidden" name="sortField" th:value="${sortField}">
-                <input type="hidden" name="sortDir" th:value="${sortDir}">
-
-                <input type="search" th:value="${keyword}" name="keyword"
-                       style="display: inline-block; width: auto; vertical-align: middle;" required>
-                &nbsp;&nbsp;
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="clearFilter()">
-                    <i class="fa-solid fa-eraser"></i>
-                </button>
-            </form>
-        </div>
+        <div th:replace="fragments :: search_form('/users/page/1')"></div>
 
         <div th:if="${message != null}" class="alert alert-success text-center">
             [[${message}]]

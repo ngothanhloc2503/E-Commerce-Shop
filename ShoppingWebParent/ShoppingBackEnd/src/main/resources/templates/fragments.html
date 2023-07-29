@@ -48,6 +48,24 @@
         </th:block>
     </div>
 
+    <div th:fragment="search_form(moduleURL)">
+        <form th:action="@{${moduleURL}}" class="m-3" style="display: inline-block; width: auto; vertical-align: middle;">
+            Filter:&nbsp;
+            <input type="hidden" name="sortField" th:value="${sortField}">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+
+            <input type="search" th:value="${keyword}" name="keyword"
+                   style="display: inline-block; width: auto; vertical-align: middle;" required>
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+                <i class="fa-solid fa-eraser"></i>
+            </button>
+        </form>
+    </div>
+
     <div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
         <div class="text-center mb-3" th:if="${totalItems > 0}">
             <span>Showing [[${entityName}]] # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
