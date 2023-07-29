@@ -71,6 +71,8 @@
         </table>
     </div>
 
+    <div th:replace="fragments :: pagination('/categories', 'top-level categories')"></div>
+
     <div th:replace="modal_fragments :: confirm_modal"></div>
 
     <div th:replace="fragments :: page_footer"></div>

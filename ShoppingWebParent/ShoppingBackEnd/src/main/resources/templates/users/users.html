@@ -44,16 +44,16 @@
                 <thead class="table-dark">
                     <tr>
                         <th class="hideable-column">
-                            <th th:replace="fragments :: column-link('id',  'User ID', 'tag')" />
+                            <th th:replace="fragments :: column_link('id',  'User ID', 'tag')" />
                         </th>
                         <th>Photos</th>
                         <th class="hideable-column">
-                            <th th:replace="fragments :: column-link('email',  'E-mail', 'tag')" />
+                            <th th:replace="fragments :: column_link('email',  'E-mail', 'tag')" />
                         </th>
-                        <th th:replace="fragments :: column-link('firstname',  'First Name', 'none')" />
-                        <th th:replace="fragments :: column-link('lastname',  'Last Name', 'none')" />
+                        <th th:replace="fragments :: column_link('firstname',  'First Name', 'none')" />
+                        <th th:replace="fragments :: column_link('lastname',  'Last Name', 'none')" />
                         <th>Roles</th>
-                        <th th:replace="fragments :: column-link('enabled',  'Enabled', 'none')" />
+                        <th th:replace="fragments :: column_link('enabled',  'Enabled', 'none')" />
                         <th></th>
                     </tr>
                 </thead>
@@ -120,35 +120,7 @@
             </div>
         </div>
 
-        <div class="text-center mb-3" th:if="${totalItems > 0}">
-            <span>Showing user # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-        </div>
-        <div class="text-center mb-3" th:if="${totalItems == 0}">
-            <span>No users found</span>
-        </div>
-
-        <div th:if="${totalItems > 0}">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center flex-wrap">
-                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                        <a th:replace="fragments :: page-link(1, '&Ll;')" />
-                    </li>
-                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                        <a th:replace="fragments :: page-link(${currentPage - 1}, '&laquo;')" />
-                    </li>
-                    <li th:class="${currentPage != i ? 'page-item' : 'page-item active' }"
-                        th:each="i : ${#numbers.sequence(1, totalPages)}">
-                        <a th:replace="fragments :: page-link(${i}, ${i})" />
-                    </li>
-                    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                        <a th:replace="fragments :: page-link(${currentPage + 1}, '&raquo;')" />
-                    </li>
-                    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                        <a th:replace="fragments :: page-link(${totalPages}, '&Gg;')" />
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <div th:replace="fragments :: pagination('/users', 'users')"></div>
 
         <div th:replace="modal_fragments :: confirm_modal"></div>
 

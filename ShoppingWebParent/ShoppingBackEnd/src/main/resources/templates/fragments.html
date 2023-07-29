@@ -14,7 +14,7 @@
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <body>
-    <th th:fragment="column-link(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
+    <th th:fragment="column_link(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
         <a style="color: white; text-decoration:none"
            th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
             [[${columnLabel}]]
@@ -23,8 +23,8 @@
               th:class="${sortDir == 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down'}"></span>
     </th>
 
-    <a th:fragment="page-link(pageNum, label)" class="page-link"
-       th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+    <a th:fragment="page_link(moduleURL, pageNum, label)" class="page-link"
+       th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
         [[${label}]]
     </a>
 
@@ -39,13 +39,45 @@
 
     <div th:fragment="category_actions" th:remove="tag">
         <a class="fa-solid fa-pen-to-square fa-lg icon-green" th:href="@{'/categories/edit/' + ${category.id}}"
-           title="Edit this user" style="text-decoration:none"></a>
+           title="Edit this category" style="text-decoration:none"></a>
         &nbsp;
         <th:block th:if="${category.hasChildren == false}">
         <a class="fa-solid fa-trash icon-dark fa-lg link-delete" th:href="@{'/categories/delete/' + ${category.id}}"
            th:entityId="${category.id}"
-           title="Delete this user" style="text-decoration:none"></a>
+           title="Delete this category" style="text-decoration:none"></a>
         </th:block>
+    </div>
+
+    <div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
+        <div class="text-center mb-3" th:if="${totalItems > 0}">
+            <span>Showing [[${entityName}]] # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+        </div>
+        <div class="text-center mb-3" th:if="${totalItems == 0}">
+            <span>No [[${entityName}]] found</span>
+        </div>
+
+        <div th:if="${totalItems > 0}">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center flex-wrap">
+                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="fragments :: page_link(${moduleURL}, 1, '&Ll;')" />
+                    </li>
+                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, '&laquo;')" />
+                    </li>
+                    <li th:class="${currentPage != i ? 'page-item' : 'page-item active' }"
+                        th:each="i : ${#numbers.sequence(1, totalPages)}">
+                        <a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})" />
+                    </li>
+                    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, '&raquo;')" />
+                    </li>
+                    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, '&Gg;')" />
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 
     <div th:fragment="page_footer" class="text-center mt-4">
