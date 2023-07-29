@@ -1,19 +1,16 @@
-package com.shopping.admin.user.export;
+package com.shopping.admin;
 
-import com.shopping.common.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class AbstractExporter {
-    public void setResponseHeader(HttpServletResponse response, String contentType, String extension) {
+    public void setResponseHeader(HttpServletResponse response, String contentType, String extension, String prefix) {
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         String timestamp = dateFormatter.format(new Date());
-        String fileName = "users_" + timestamp + extension;
+        String fileName = prefix + timestamp + extension;
 
         response.setContentType(contentType);
 

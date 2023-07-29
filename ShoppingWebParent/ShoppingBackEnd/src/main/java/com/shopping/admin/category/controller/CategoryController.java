@@ -3,11 +3,10 @@ package com.shopping.admin.category.controller;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.category.CategoryNotFoundException;
 import com.shopping.admin.category.CategoryPageInfo;
+import com.shopping.admin.category.export.CategoryCsvExporter;
 import com.shopping.admin.category.service.CategoryService;
-import com.shopping.admin.user.UserNotFoundException;
 import com.shopping.common.entity.Category;
-import com.shopping.common.entity.Role;
-import com.shopping.common.entity.User;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -144,5 +143,12 @@ public class CategoryController {
         }
 
         return "redirect:/categories";
+    }
+
+    @GetMapping("/categories/export/csv")
+    public void exportToCSV(HttpServletResponse response) throws IOException {
+        List<Category> categoryList = categoryService.listCategoriesUsedInForm();
+        CategoryCsvExporter exporter = new CategoryCsvExporter();
+        exporter.export(categoryList, response);
     }
 }
