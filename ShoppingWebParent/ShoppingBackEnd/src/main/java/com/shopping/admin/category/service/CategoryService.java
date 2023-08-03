@@ -26,7 +26,7 @@ public class CategoryService {
         try {
             return categoryRepository.findById(id).get();
         } catch (NoSuchElementException e) {
-            throw  new CategoryNotFoundException("Could not find any category with ID " + id);
+            throw new CategoryNotFoundException("Could not find any category with ID " + id);
         }
     }
 

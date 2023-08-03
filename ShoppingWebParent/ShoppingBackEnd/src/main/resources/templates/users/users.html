@@ -51,7 +51,8 @@
                         <td>[[${user.roles}]]</td>
                         <td>
                             <div th:replace="fragments :: status(${user.enabled}, 'user', '/users/' + ${user.id})"></div>
-                            &nbsp;
+                        </td>
+                        <td>
                             <div th:replace="fragments :: edit('user', '/users/edit/' + ${user.id})"></div>
                             &nbsp;
                             <div th:replace="fragments :: delete('user', ${user.id}, '/users/delete/' + ${user.id}, true)"></div>

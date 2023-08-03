@@ -78,8 +78,7 @@ public class CategoryController {
 
     @PostMapping("/categories/save")
     public String saveCategory(Category category, @RequestParam("fileImage") MultipartFile multipartFile,
-                               RedirectAttributes redirectAttributes)
-            throws IOException {
+                               RedirectAttributes redirectAttributes) throws IOException {
         if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             category.setImage(fileName);

@@ -37,7 +37,8 @@
                 <td class="hideable-column">[[${category.alias}]]</td>
                 <td>
                     <div th:replace="fragments :: status(${category.enabled}, 'category', '/categories/' + ${category.id})"></div>
-                    &nbsp;
+                </td>
+                <td>
                     <div th:replace="fragments :: edit('category', '/categories/edit/' + ${category.id})"></div>
                     &nbsp;
                     <div th:replace="fragments :: delete('category', ${category.id}, '/categories/delete/' + ${category.id}, ${!category.hasChildren})"></div>
