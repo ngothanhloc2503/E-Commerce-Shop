@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" th:remove="tag">
+    <div class="row mb-3" >
+        <label class="col-sm-2 col-form-label">Product Name:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" th:field="*{name}" required minlength="3" maxlength="256">
+        </div>
+    </div>
+
+    <div class="row mb-3" >
+        <label class="col-sm-2 col-form-label">Alias:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" th:field="*{alias}" minlength="3" maxlength="256"
+                   placeholder="Default is product name (spaces are replaced by dashes)">
+        </div>
+    </div>
+
+    <div class="row mb-3" >
+        <label class="col-sm-2 col-form-label">Brand:</label>
+        <div class="col-sm-10">
+            <select th:field="*{brand}" class="form-control" required>
+                <th:block th:each="brand : ${listBrands}">
+                    <option th:value="${brand.id}">[[${brand.name}]]</option>
+                </th:block>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3" >
+        <label class="col-sm-2 col-form-label">Category:</label>
+        <div class="col-sm-10">
+            <select th:field="*{category}" class="form-control" required>
+                <th:block th:each="category : ${listCategories}">
+                    <option th:value="${category.id}">[[${category.name}]]</option>
+                </th:block>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3" >
+        <label class="col-sm-2 col-form-label">Enabled:</label>
+        <div class="col-sm-10 mt-auto mb-auto">
+            <input type="checkbox" th:field="*{enabled}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">In Stock:</label>
+        <div class="col-sm-10 mt-auto mb-auto">
+            <input type="checkbox" th:field="*{inStock}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Cost:</label>
+        <div class="col-sm-10">
+            <input type="number" th:field="*{cost}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">List Price:</label>
+        <div class="col-sm-10">
+            <input type="number" th:field="*{price}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Discount:</label>
+        <div class="col-sm-10">
+            <input type="number" th:field="*{discountPercent}">
+        </div>
+    </div>
+</div>
+</body>
+</html>
