@@ -68,6 +68,7 @@
     <div th:replace="fragments :: page_footer"></div>
 <script type="text/javascript" th:src="@{/js/common_form.js}"></script>
 <script type="text/javascript">
+    MAX_FILE_SIZE = 102400; // 100 KiB
     moduleURL = "[[@{/brands}]]";
 
     $(document).ready(function () {
