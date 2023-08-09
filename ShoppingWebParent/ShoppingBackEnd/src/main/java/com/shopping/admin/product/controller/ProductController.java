@@ -2,12 +2,9 @@ package com.shopping.admin.product.controller;
 
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.brand.service.BrandService;
-import com.shopping.admin.category.CategoryNotFoundException;
-import com.shopping.admin.category.service.CategoryService;
 import com.shopping.admin.product.ProductNotFoundException;
 import com.shopping.admin.product.service.ProductService;
 import com.shopping.common.entity.Brand;
-import com.shopping.common.entity.Category;
 import com.shopping.common.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

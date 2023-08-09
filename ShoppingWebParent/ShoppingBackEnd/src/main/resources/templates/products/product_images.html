@@ -2,17 +2,32 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="content" th:remove="tag">
-    <div class="row">
+    <div class="row" id="divProductImages">
         <div class="col border m-3 p-2">
             <div>
                 <label>Main Images:</label>
             </div>
             <div class="m-2">
-                <img th:src="@{${product.mainImagePath}}" id="thumbnail" alt="Main image proview" class="img-fluid"
-                     style="width: 200px" accept="images/png, images/jpg, images/jpeg">
+                <img th:src="@{${product.mainImagePath}}" id="thumbnail" alt="Main image preview" class="img-fluid"
+                     style="width: 400px">
             </div>
             <div>
-                <input type="file" id="fileImage" name="fileImage" required>
+                <input type="file" id="fileImage" name="fileImage" required
+                       accept="images/png, images/jpg, images/jpeg">
+            </div>
+        </div>
+
+        <div class="col border m-3 p-2" id="divExtraImage0">
+            <div id="extraImageHeader0">
+                <label>Extra Images #1:</label>
+            </div>
+            <div class="m-2">
+                <img th:src="@{/images/image_thumbnail.png}" id="extraThumbnail0" alt="Extra image #1 preview" class="img-fluid"
+                     style="width: 400px">
+            </div>
+            <div>
+                <input type="file" name="extraImage"
+                       accept="images/png, images/jpg, images/jpeg">
             </div>
         </div>
 
