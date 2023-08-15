@@ -3,6 +3,14 @@
 *.icon-green { color: green}
 *.icon-dark { color: gray}
 
+*.form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: auto;
+}
+
 @media screen and (max-width: 768px){
     /*small screen*/
     div.full-details {

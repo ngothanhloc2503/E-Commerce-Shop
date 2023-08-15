@@ -104,7 +104,7 @@ public class BrandController {
 
     @GetMapping("/brands/edit/{id}")
     public String editBrand(@PathVariable("id") Integer id, Model model,
-                            RedirectAttributes redirectAttributes) throws BrandNotFoundException {
+                            RedirectAttributes redirectAttributes) {
         try {
             List<Category> listCategories = categoryService.listCategoriesUsedInForm();
             Brand brand = brandService.getBrandById(id);

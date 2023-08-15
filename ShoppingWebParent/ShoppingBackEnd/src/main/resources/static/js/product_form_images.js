@@ -1,17 +1,6 @@
 var extraImagesCount = 0;
-dropdownBrands = $("#brand");
-dropdownCategories = $("#category");
 
 $(document).ready(function () {
-    $("#shortDescription").richText();
-    $("#fullDescription").richText();
-
-    dropdownBrands.change(function () {
-        dropdownCategories.empty();
-        getCategories();
-    });
-    getCategories();
-
     $("input[name='extraImage']").each(function (index) {
         extraImagesCount++;
 
@@ -25,12 +14,16 @@ $(document).ready(function () {
 });
 
 function showExtraImageThumbnail(fileInput, index) {
+    if (!checkFileSize(fileInput)) {
+        return;
+    }
+
     var file = fileInput.files[0];
     var reader = new FileReader();
     reader.onload = function (e) {
         $("#extraThumbnail" + index).attr("src", e.target.result);
     }
-
+    console.log(index);
     reader.readAsDataURL(file);
 
     if (index >= extraImagesCount - 1) { // check Next Extra Image Section generated?
@@ -68,40 +61,4 @@ function addNextExtraImageSection(index) {
 
 function removeExtraImage(index) {
     $("#divExtraImage" + index).remove();
-}
-
-function getCategories() {
-    brandId = dropdownBrands.val();
-    url = brandModuleURL + "/" + brandId + "/categories";
-
-    $.get(url, function (responseJson) {
-        $.each(responseJson, function (index, category) {
-            $("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
-        })
-    })
-}
-
-function checkUnique(form) {
-    productId = $("#id").val();
-    productName = $("#name").val();
-
-    csrfValue = $("input[name='_csrf']").val();
-
-    url = "[[@{/products/check_unique}]]";
-
-    params = {id: productId, name: productName, _csrf: csrfValue};
-
-    $.post(url, params, function (response) {
-        if (response == "OK") {
-            form.submit();
-        } else if (response = "Duplicate") {
-            showWarningModal("There is another product having same name " + productName);
-        } else {
-            showErrorModal("Unknown response from the server");
-        }
-    }).fail(function () {
-        showErrorModal("Could connect to the server");
-    });
-
-    return false;
 }
