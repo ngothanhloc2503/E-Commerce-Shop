@@ -25,6 +25,12 @@ public class ProductImage {
         this.product = product;
     }
 
+    public ProductImage(Long id, String name, Product product) {
+        this.id = id;
+        this.name = name;
+        this.product = product;
+    }
+
     public Long getId() {
         return id;
     }
