@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class ProductService {
-    public static int PRODUCT_PER_PAGE = 4;
+    public static int PRODUCT_PER_PAGE = 5;
 
     @Autowired
     private ProductRepository productRepository;

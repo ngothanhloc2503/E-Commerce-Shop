@@ -12,7 +12,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Integer>, PagingAndSortingRepository<Product, Integer> {
 
-    @Query("SELECT p FROM Product p WHERE p.name LIKE %?1%")
+    @Query("SELECT p FROM Product p WHERE p.name LIKE %?1%"
+            + " OR p.shortDescription LIKE %?1%"
+            + " OR p.fullDescription LIKE %?1%"
+            + " OR p.brand.name LIKE %?1%"
+            + " OR p.category.name LIKE %?1%")
     Page<Product> findAll(String keyword, Pageable pageable);
 
     Product findByName(String name);

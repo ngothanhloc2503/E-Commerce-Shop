@@ -25,6 +25,9 @@ public class Category {
 
     private boolean enabled;
 
+    @Column(name = "all_parent_ids")
+    private String allParentIDs;
+
     public Category() {
     }
 
@@ -178,5 +181,13 @@ public class Category {
 
     public void setHasChildren(boolean hasChildren) {
         this.hasChildren = hasChildren;
+    }
+
+    public String getAllParentIDs() {
+        return allParentIDs;
+    }
+
+    public void setAllParentIDs(String allParentIDs) {
+        this.allParentIDs = allParentIDs;
     }
 }
