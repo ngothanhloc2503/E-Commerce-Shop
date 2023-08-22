@@ -1,6 +1,5 @@
 package com.shopping.admin.product.service;
 
-import com.shopping.admin.category.CategoryNotFoundException;
 import com.shopping.admin.product.ProductNotFoundException;
 import com.shopping.admin.product.repository.ProductRepository;
 import com.shopping.common.entity.Product;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -25,17 +23,27 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public Page<Product> findAll() {
-        return listByPage(1, "id", "asc", null);
+        return listByPage(1, "id", "asc", null, 0);
     }
 
-    public Page<Product> listByPage(Integer pageNum, String sortField, String sortDir, String keyword) {
+    public Page<Product> listByPage(Integer pageNum, String sortField, String sortDir, String keyword, Integer categoryId) {
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_PER_PAGE, sort);
-        if (keyword != null) {
+        if (keyword != null && !keyword.isEmpty()) {
+            if (categoryId != null && categoryId > 0) {
+                String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+                return productRepository.searchInCategory(categoryId, categoryIdMatch, keyword, pageable);
+            }
+
             return productRepository.findAll(keyword, pageable);
         }
+        if (categoryId != null && categoryId > 0) {
+            String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+            return productRepository.findAllInCategory(categoryId, categoryIdMatch, pageable);
+        }
+
         return productRepository.findAll(pageable);
     }
 
@@ -53,6 +61,15 @@ public class ProductService {
         product.setUpdatedTime(new Date());
 
         return productRepository.save(product);
+    }
+
+    public void saveProductPrice(Product product) {
+        Product productInDB = productRepository.findById(product.getId()).get();
+        productInDB.setCost(product.getCost());
+        productInDB.setPrice(product.getPrice());
+        productInDB.setDiscountPercent(product.getDiscountPercent());
+
+        productRepository.save(productInDB);
     }
 
     public String checkUnique(Integer id, String name) {

@@ -51,10 +51,11 @@
     </div>
 
     <div th:fragment="search_form_and_message(moduleURL)">
-        <form th:action="@{${moduleURL}}" class="m-3" style="display: inline-block; width: auto; vertical-align: middle;">
-            Filter:&nbsp;
+        <form th:action="@{${moduleURL}}" class="form-inline m-3" style="display: inline-block; width: auto; vertical-align: middle;">
             <input type="hidden" name="sortField" th:value="${sortField}">
             <input type="hidden" name="sortDir" th:value="${sortDir}">
+
+            Filter:&nbsp;
 
             <input type="search" th:value="${keyword}" name="keyword"
                    style="display: inline-block; width: auto; vertical-align: middle;" required>

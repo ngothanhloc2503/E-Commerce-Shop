@@ -57,12 +57,23 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .requestMatchers("/users/**", "/settings/**").hasAuthority("Admin")
+
                 .requestMatchers("/categories/**", "/brands/**", "/articles/**", "/menus/**")
                     .hasAnyAuthority("Admin", "Editor")
-                .requestMatchers("/products/**").hasAnyAuthority("Admin", "Salesperson", "Editor", "Shipper")
+
+                .requestMatchers("/products/save", "/products/edit/**", "/products/check_unique")
+                    .hasAnyAuthority("Admin", "Editor", "Salesperson")
+
+                .requestMatchers("/products", "/products/", "/products/detail/**", "/products/page/**")
+                    .hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
+
+                .requestMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
+
                 .requestMatchers("/customers/**", "/shipping/**", "/reports/**")
                     .hasAnyAuthority("Admin", "Salesperson")
+
                 .requestMatchers("/orders/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
