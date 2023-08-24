@@ -76,7 +76,8 @@ public class UserService {
         User userInDB = userRepository.findById(userInForm.getId()).get();
 
         if (!userInForm.getPassword().isEmpty()) {
-            userInDB.setPassword(userInDB.getPassword());
+            userInDB.setPassword(userInForm.getPassword());
+            encodePassword(userInDB);
         }
 
         if (userInForm.getPhotos() != null) {

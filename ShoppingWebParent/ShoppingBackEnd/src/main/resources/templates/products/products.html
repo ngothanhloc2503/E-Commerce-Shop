@@ -17,7 +17,7 @@
 
         <div>
             <form th:action="@{/products/page/1}" class="form-inline m-3 d-flex" id="searchForm"
-                  style="display: inline-block; width: auto; vertical-align: middle;">
+                  style="flex-wrap: wrap; width: auto; vertical-align: middle;">
                 <input type="hidden" name="sortField" th:value="${sortField}">
                 <input type="hidden" name="sortDir" th:value="${sortDir}">
 
@@ -38,6 +38,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
+                &nbsp;
                 <button type="button" class="btn btn-secondary" onclick="clearFilter()">
                     <i class="fa-solid fa-eraser"></i>
                 </button>
@@ -57,8 +58,8 @@
                         </th>
                         <th>Main Image</th>
                         <th th:replace="fragments :: column_link('/products', 'name', 'Product Name', 'none')"></th>
-                        <th>Brand</th>
-                        <th>Category</th>
+                        <th class="hideable-column">Brand</th>
+                        <th class="hideable-column">Category</th>
 
                         <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
                         <th>Enabled</th>
@@ -77,8 +78,8 @@
                             <a class="link-detail" th:href="@{'/products/details/' + ${product.id}}"
                                th:title="${product.name}">[[${product.shortName}]]</a>
                         </td>
-                        <td>[[${product.brand.name}]]</td>
-                        <td>[[${product.category.name}]]</td>
+                        <td class="hideable-column">[[${product.brand.name}]]</td>
+                        <td class="hideable-column">[[${product.category.name}]]</td>
 
                         <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
                         <td>
@@ -104,6 +105,32 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="less-details">
+            <div th:each="product : ${listProducts}" class="row m-1">
+                <div class="col">
+                    <img th:src="@{${product.mainImagePath}}" style="width: 120px" class="img-fluid">
+                </div>
+                <div class="col">
+                    <a class="link-detail" th:href="@{'/products/details/' + ${product.id}}"
+                       th:title="${product.name}">[[${product.shortName}]]</a>
+                    <br>
+                    <a class="fa-solid fa-file-alt fa-2x icon-green fa-lg link-detail"
+                       th:href="@{'/products/detail/' + ${product.id}}"
+                       title="View details of this product"></a>
+
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
+                        &nbsp;
+                        <div th:replace="fragments :: edit('product', '/products/edit/' + ${product.id})"></div>
+                    </th:block>
+
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+                        &nbsp;
+                        <div th:replace="fragments :: delete('product', ${product.id}, '/products/delete/' + ${product.id}, true)"></div>
+                    </th:block>
+                </div>
+            </div>
         </div>
 
         <div class="modal fade" id="detailModal">
