@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="header_menu">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-0">
+        <a class="navbar-brand ms-3" th:href="@{/}">
+            <img th:src="@{/images/logo.png}">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar, #searchNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="topNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="">Careers</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="">Payments</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="">Shipping &amp; Delivery</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="">Login</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="">Register</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div th:fragment="search_nav" class="row">
+    <div class="col-md">
+        <nav class="navbar navbar-expand-sm bg-light navbar-dark p-0">
+            <div class="collapse navbar-collapse" id="searchNavbar">
+                <form th:action="@{/search}" method="get" class="form-inline m-3"
+                      style="display: inline-block; width: auto; vertical-align: middle;">
+                    <input type="search" name="keyword" th:value="${keyword}"
+                           placeholder="keyword" required style="vertical-align: middle;">
+                    <input type="submit" value="Search" class="btn btn-outline-success">
+                </form>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div th:fragment="footer_menu">
+    <div>
+        <nav class="navbar navbar-expand-lg bg-light navbar-light p-0 mt-3">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bottomNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="bottomNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link fw-bolder" href="">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link fw-bolder" href="">Privacy Notice</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link fw-bolder" href="">Returns &amp; Refunds</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="text-center mt-4">
+        <p>Shopping - Copyright &copy; Shopping Ltd.</p>
+    </div>
+</div>
+</body>
+</html>

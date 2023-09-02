@@ -58,6 +58,7 @@ public class Product {
     private Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("name asc")
     private Set<ProductImage> images = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -276,5 +277,13 @@ public class Product {
             return name.substring(0, 70).concat("..");
         }
         return name;
+    }
+
+    @Transient
+    public float getDiscountPrice() {
+        if (discountPercent > 0) {
+            return Math.round(price * ((100 - discountPercent) / 100) * 100) / 100.f;
+        }
+        return this.price;
     }
 }

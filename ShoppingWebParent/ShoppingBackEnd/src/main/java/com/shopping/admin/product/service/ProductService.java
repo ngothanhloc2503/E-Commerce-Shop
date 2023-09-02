@@ -1,8 +1,8 @@
 package com.shopping.admin.product.service;
 
-import com.shopping.admin.product.ProductNotFoundException;
 import com.shopping.admin.product.repository.ProductRepository;
 import com.shopping.common.entity.Product;
+import com.shopping.common.exception.ProductNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

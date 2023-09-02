@@ -1,6 +1,6 @@
 package com.shopping.admin.brand.controller;
 
-import com.shopping.admin.brand.BrandNotFoundException;
+import com.shopping.common.exception.BrandNotFoundException;
 import com.shopping.admin.brand.BrandNotFoundRestException;
 import com.shopping.admin.brand.DTO.CategoryDTO;
 import com.shopping.admin.brand.service.BrandService;

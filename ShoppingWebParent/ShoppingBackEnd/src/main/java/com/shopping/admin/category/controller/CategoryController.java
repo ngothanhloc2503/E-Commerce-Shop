@@ -1,7 +1,7 @@
 package com.shopping.admin.category.controller;
 
 import com.shopping.admin.FileUploadUtil;
-import com.shopping.admin.category.CategoryNotFoundException;
+import com.shopping.common.exception.CategoryNotFoundException;
 import com.shopping.admin.category.CategoryPageInfo;
 import com.shopping.admin.category.export.CategoryCsvExporter;
 import com.shopping.admin.category.service.CategoryService;

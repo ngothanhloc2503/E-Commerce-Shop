@@ -1,6 +1,6 @@
 package com.shopping.admin.brand.service;
 
-import com.shopping.admin.brand.BrandNotFoundException;
+import com.shopping.common.exception.BrandNotFoundException;
 import com.shopping.admin.brand.repository.BrandRepository;
 import com.shopping.common.entity.Brand;
 import jakarta.transaction.Transactional;

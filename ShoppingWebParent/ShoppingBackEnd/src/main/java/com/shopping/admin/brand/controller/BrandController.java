@@ -1,7 +1,7 @@
 package com.shopping.admin.brand.controller;
 
 import com.shopping.admin.FileUploadUtil;
-import com.shopping.admin.brand.BrandNotFoundException;
+import com.shopping.common.exception.BrandNotFoundException;
 import com.shopping.admin.brand.export.BrandCsvExporter;
 import com.shopping.admin.brand.service.BrandService;
 import com.shopping.admin.category.service.CategoryService;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.Console;
 import java.io.IOException;
 import java.util.List;
 

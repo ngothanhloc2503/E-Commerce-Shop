@@ -1,6 +1,6 @@
 package com.shopping.admin.category.service;
 
-import com.shopping.admin.category.CategoryNotFoundException;
+import com.shopping.common.exception.CategoryNotFoundException;
 import com.shopping.admin.category.CategoryPageInfo;
 import com.shopping.admin.category.repository.CategoryRepository;
 import com.shopping.common.entity.Category;

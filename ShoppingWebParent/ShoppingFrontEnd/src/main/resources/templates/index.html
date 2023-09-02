@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome to Shopping E-Commerce</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Shopping', 'none')"></head>
 <body>
-    <h1>Hallo</h1>
+    <div th:replace="navigation :: header_menu"></div>
+    <div th:replace="navigation :: search_nav"></div>
+    <div th:replace="breadcrumb :: content"></div>
+
+    <div class="container-fluid">
+        <div>
+            <h1>Shopping by Categories</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" th:each="category : ${listCategories}">
+                <div><img th:src="@{${category.imagePath}}" width="80"></div>
+                <div>
+                    <a th:href="@{'/c/' + ${category.alias}}">[[${category.name}]]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="navigation :: footer_menu"></div>
 </body>
 </html>

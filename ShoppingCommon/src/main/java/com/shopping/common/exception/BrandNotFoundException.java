@@ -1,4 +1,4 @@
-package com.shopping.admin.brand;
+package com.shopping.common.exception;
 
 public class BrandNotFoundException extends Exception{
 
