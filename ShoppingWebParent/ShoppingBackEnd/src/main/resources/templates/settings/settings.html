@@ -21,29 +21,22 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" id="settingTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general"
-                        type="button" role="tab">General
-                </button>
+                <a class="nav-link active" data-bs-toggle="tab" href="#general" role="tab">General</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#countries"
-                        type="button" role="tab">Countries
-                </button>
+                <a class="nav-link" data-bs-toggle="tab" href="#countries" role="tab">Countries</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#states"
-                        type="button" role="tab">States
-                </button>
+                <a class="nav-link" data-bs-toggle="tab" href="#states" role="tab">States</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#mailServer"
-                        type="button" role="tab">Mail Server
-                </button>
+                <a class="nav-link" data-bs-toggle="tab" href="#mailServer" role="tab">Mail Server</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#mailTemplates"
-                        type="button" role="tab">Mail Templates
-                </button>
+                <a class="nav-link" data-bs-toggle="tab" href="#mailTemplates" role="tab">Mail Templates</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="#payment" role="tab">Payment</a>
             </li>
         </ul>
 
@@ -53,10 +46,10 @@
                 <div th:replace="settings/general :: content"></div>
             </div>
             <div class="tab-pane p-3" id="countries" role="tabpanel">
-
+                <div th:replace="settings/countries :: content"></div>
             </div>
             <div class="tab-pane p-3" id="states" role="tabpanel">
-
+                <div th:replace="settings/states :: content"></div>
             </div>
             <div class="tab-pane p-3" id="mailServer" role="tabpanel">
 
@@ -64,6 +57,19 @@
             <div class="tab-pane p-3" id="mailTemplates" role="tabpanel">
 
             </div>
+            <div class="tab-pane p-3" id="payment" role="tabpanel">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="toast align-items-center text-white bg-primary border-0"
+         role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="toastMessage"></span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
 
@@ -71,7 +77,13 @@
 </div>
 <script type="text/javascript">
     MAX_FILE_SIZE = 1024000;
+    contextPath = "[[@{/}]]";
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
 </script>
+<script th:src="@{/js/common.js}"></script>
 <script th:src="@{/js/common_form.js}"></script>
+<script th:src="@{/js/countries_setting.js}"></script>
+<script th:src="@{/js/states_setting.js}"></script>
 </body>
 </html>
