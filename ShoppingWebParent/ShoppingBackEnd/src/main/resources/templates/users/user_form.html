@@ -103,7 +103,7 @@
             $.post(url, params, function (response) {
                 if (response == "OK") {
                     form.submit();
-                } else if (response = "Duplicated") {
+                } else if (response == "Duplicated") {
                     showWarningModal("There is another user having email " + userEmail);
                 } else {
                     showErrorModal("Unknown response from the server");

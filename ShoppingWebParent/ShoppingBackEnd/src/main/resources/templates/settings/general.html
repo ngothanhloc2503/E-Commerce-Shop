@@ -31,7 +31,7 @@
         <div class="row mb-3" >
             <label class="col-sm-4 col-form-label">Currency Type:</label>
             <div class="col-sm-8">
-                <select name="CURRENCY_ID" class="form-control" required>
+                <select name="CURRENCY_ID" class="form-select" required>
                     <th:block th:each="currency : ${listCurrencies}">
                         <option th:value="${currency.id}"
                                 th:selected="${currency.id} == ${CURRENCY_ID}">[[${currency}]]</option>
@@ -43,7 +43,7 @@
         <div class="row mb-3" >
             <label class="col-sm-4 col-form-label">Currency Symbol Position:</label>
             <div class="col-sm-8">
-                <select name="CURRENCY_SYMBOL_POSITION" class="form-control" required>
+                <select name="CURRENCY_SYMBOL_POSITION" class="form-select" required>
                     <option value="Before price"
                             th:selected="${CURRENCY_SYMBOL_POSITION} == 'Before price'">Before price</option>
                     <option value="After price"
@@ -55,7 +55,7 @@
         <div class="row mb-3" >
             <label class="col-sm-4 col-form-label">Decimal Point Type:</label>
             <div class="col-sm-8">
-                <select name="DECIMAL_POINT_TYPE" class="form-control" required>
+                <select name="DECIMAL_POINT_TYPE" class="form-select" required>
                     <option value="POINT"
                             th:selected="${DECIMAL_POINT_TYPE} == 'POINT'">Point(.)</option>
                     <option value="COMMA"
@@ -67,7 +67,7 @@
         <div class="row mb-3" >
             <label class="col-sm-4 col-form-label">Decimal Digits:</label>
             <div class="col-sm-8">
-                <select name="DECIMAL_DIGITS" class="form-control" required>
+                <select name="DECIMAL_DIGITS" class="form-select" required>
                     <option value="0" th:selected="${DECIMAL_DIGITS} == 0">0</option>
                     <option value="1" th:selected="${DECIMAL_DIGITS} == 1">1</option>
                     <option value="2" th:selected="${DECIMAL_DIGITS} == 2">2</option>
@@ -80,7 +80,7 @@
         <div class="row mb-3" >
             <label class="col-sm-4 col-form-label">Thousands Point Type:</label>
             <div class="col-sm-8">
-                <select name="THOUSANDS_POINT_TYPE" class="form-control" required>
+                <select name="THOUSANDS_POINT_TYPE" class="form-select" required>
                     <option value="POINT"
                             th:selected="${THOUSANDS_POINT_TYPE} == 'POINT'">Point(.)</option>
                     <option value="COMMA"

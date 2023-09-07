@@ -105,7 +105,7 @@
         $.post(url, params, function (response) {
             if (response == "OK") {
                 form.submit();
-            } else if (response = "DuplicateName") {
+            } else if (response == "DuplicateName") {
                 showWarningModal("There is another brand having same name " + brandName);
             } else {
                 showErrorModal("Unknown response from the server");

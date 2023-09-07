@@ -2,10 +2,8 @@ package com.shopping.admin.setting.controller;
 
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.setting.GeneralSettingBag;
-import com.shopping.admin.setting.repository.CountryRepository;
 import com.shopping.admin.setting.repository.CurrencyRepository;
 import com.shopping.admin.setting.service.SettingService;
-import com.shopping.common.entity.Country;
 import com.shopping.common.entity.Currency;
 import com.shopping.common.entity.Setting;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -92,5 +89,27 @@ public class SettingController {
             }
         }
         settingService.saveAll(listSettings);
+    }
+
+    @PostMapping("/settings/save_mail_server")
+    public String saveMailServerSettings(HttpServletRequest request, RedirectAttributes redirectAttributes){
+        List<Setting> mailServerSettings = settingService.getMailServerSettings();
+
+        updateSettingsValueFromForm(request, mailServerSettings);
+
+        redirectAttributes.addFlashAttribute("message", "Mail server settings have been saved.");
+
+        return "redirect:/settings";
+    }
+
+    @PostMapping("/settings/save_mail_templates")
+    public String saveMailTemplateSettings(HttpServletRequest request, RedirectAttributes redirectAttributes){
+        List<Setting> mailTemplateSettings = settingService.getMailTemplateSettings();
+
+        updateSettingsValueFromForm(request, mailTemplateSettings);
+
+        redirectAttributes.addFlashAttribute("message", "Mail templates settings have been saved.");
+
+        return "redirect:/settings";
     }
 }

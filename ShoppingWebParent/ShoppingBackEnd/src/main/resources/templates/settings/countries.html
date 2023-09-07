@@ -11,23 +11,25 @@
     <select style="height: 300px" size="3" class="form-control" id="dropdownCountries">
     </select>
 
-    <div class="row my-3 align-items-md-center">
-        <label class="col-auto mt-2" id="labelCountryName">Country Name:</label>
-        <div class="col-md">
-            <input type="text" id="fieldCountryName" class="form-control mt-2">
-        </div>
+    <form id="formCountry">
+        <div class="row my-3 align-items-md-center">
+            <label class="col-auto mt-2" id="labelCountryName">Country Name:</label>
+            <div class="col-md">
+                <input type="text" id="fieldCountryName" class="form-control mt-2" required minlength="3" maxlength="45">
+            </div>
 
-        <label class="col-auto mt-2" id="labelCountryCode">Country Code:</label>
-        <div class="col-md">
-            <input type="text" id="fieldCountryCode" class="form-control mt-2">
-        </div>
+            <label class="col-auto mt-2" id="labelCountryCode">Country Code:</label>
+            <div class="col-md">
+                <input type="text" id="fieldCountryCode" class="form-control mt-2" required minlength="2" maxlength="45">
+            </div>
 
-        <div class="col-lg-4 mt-2">
-            <input type="button" id="btnAddCountry" value="Add" class="btn btn-secondary me-2">
-            <input type="button" id="btnUpdateCountry" value="Update" class="btn btn-secondary me-2" disabled="disabled">
-            <input type="button" id="btnDeleteCountry" value="Delete" class="btn btn-secondary" disabled="disabled">
+            <div class="col-lg-4 mt-2">
+                <input type="button" id="btnAddCountry" value="Add" class="btn btn-secondary me-2">
+                <input type="button" id="btnUpdateCountry" value="Update" class="btn btn-secondary me-2" disabled="disabled">
+                <input type="button" id="btnDeleteCountry" value="Delete" class="btn btn-secondary" disabled="disabled">
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 </body>
 </html>

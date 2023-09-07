@@ -68,6 +68,8 @@ function deleteState() {
 }
 
 function updateState() {
+    if (!validateFormState()) return;
+
     url = contextPath + "states/save";
     stateId = dropdownStatesByCountry.val();
     stateName = fieldStateName.val();
@@ -96,7 +98,18 @@ function updateState() {
     })
 }
 
+function validateFormState() {
+    formState = document.getElementById("formState");
+    if (formState.checkValidity()) {
+        formState.reportValidity();
+        return false;
+    }
+    return true;
+}
+
 function addState() {
+    if (!validateFormState()) return;
+
     url = contextPath + "states/save";
     stateName = fieldStateName.val();
     selectedCountry = $("#dropdownCountriesForStates option:selected");

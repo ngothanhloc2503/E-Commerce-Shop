@@ -90,9 +90,9 @@
         $.post(url, params, function (response) {
             if (response == "OK") {
                 form.submit();
-            } else if (response = "DuplicateName") {
+            } else if (response == "DuplicateName") {
                 showWarningModal("There is another category having same name " + categoryName);
-            } else if (response = "DuplicateAlias") {
+            } else if (response == "DuplicateAlias") {
                 showWarningModal("There is another category having same alias " + categoryAlias);
             } else {
                 showErrorModal("Unknown response from the server");

@@ -45,7 +45,7 @@ function checkUnique(form) {
     $.post(checkUniqueUrl, params, function (response) {
         if (response == "OK") {
             form.submit();
-        } else if (response = "Duplicate") {
+        } else if (response == "Duplicate") {
             showWarningModal("There is another product having same name " + productName);
         } else {
             showErrorModal("Unknown response from the server");

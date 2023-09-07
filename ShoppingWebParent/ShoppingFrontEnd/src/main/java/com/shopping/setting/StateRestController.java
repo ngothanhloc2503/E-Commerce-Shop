@@ -1,12 +1,12 @@
-package com.shopping.admin.setting.controller;
+package com.shopping.setting;
 
-import com.shopping.common.entity.StateDTO;
-import com.shopping.admin.setting.repository.CountryRepository;
-import com.shopping.admin.setting.repository.StateRepository;
 import com.shopping.common.entity.Country;
 import com.shopping.common.entity.State;
+import com.shopping.common.entity.StateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class StateRestController {
 
     @Autowired CountryRepository countryRepository;
 
-    @GetMapping("/states/list_by_country/{country_id}")
+    @GetMapping("/settings/list_states_by_country/{country_id}")
     private List<StateDTO> listByCountry(@PathVariable("country_id") Integer countryId) {
         List<StateDTO> listStates = new ArrayList<>();
         Country country = countryRepository.findById(countryId).get();
@@ -30,15 +30,5 @@ public class StateRestController {
         }
 
         return listStates;
-    }
-
-    @PostMapping("/states/save")
-    private String saveState(@RequestBody State state) {
-        return String.valueOf(stateRepository.save(state).getId());
-    }
-
-    @DeleteMapping("/states/delete/{state_id}")
-    private void deleteState(@PathVariable("state_id") Integer id) {
-        stateRepository.deleteById(id);
     }
 }
