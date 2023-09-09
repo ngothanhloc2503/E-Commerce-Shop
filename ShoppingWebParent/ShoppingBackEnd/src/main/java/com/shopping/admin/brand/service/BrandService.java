@@ -1,5 +1,6 @@
 package com.shopping.admin.brand.service;
 
+import com.shopping.admin.paging.PagingAndSortingHelper;
 import com.shopping.common.exception.BrandNotFoundException;
 import com.shopping.admin.brand.repository.BrandRepository;
 import com.shopping.common.entity.Brand;
@@ -26,15 +27,8 @@ public class BrandService {
         return (List<Brand>) brandRepository.findAll();
     }
 
-    public Page<Brand> listByPage(Integer pageNum, String sortField, String sortDir, String keyword) {
-        Sort sort = Sort.by(sortField);
-        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-
-        Pageable pageable = PageRequest.of(pageNum - 1, BRAND_PER_PAGE, sort);
-        if (keyword != null) {
-            return brandRepository.findAll(keyword, pageable);
-        }
-        return brandRepository.findAll(pageable);
+    public void listByPage(Integer pageNum, PagingAndSortingHelper helper) {
+        helper.listEntities(pageNum, BRAND_PER_PAGE, brandRepository);
     }
 
     public String checkUnique(Integer id, String name) {

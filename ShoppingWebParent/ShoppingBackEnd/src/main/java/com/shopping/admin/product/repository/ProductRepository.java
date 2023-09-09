@@ -1,5 +1,6 @@
 package com.shopping.admin.product.repository;
 
+import com.shopping.admin.paging.SearchRepository;
 import com.shopping.common.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +11,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends CrudRepository<Product, Integer>, PagingAndSortingRepository<Product, Integer> {
+public interface ProductRepository extends CrudRepository<Product, Integer>,
+        SearchRepository<Product, Integer> {
 
     @Query("SELECT p FROM Product p WHERE p.name LIKE %?1%"
             + " OR p.shortDescription LIKE %?1%"

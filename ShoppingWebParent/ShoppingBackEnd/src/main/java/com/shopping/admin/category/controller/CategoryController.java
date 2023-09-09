@@ -99,7 +99,7 @@ public class CategoryController {
 
     }
 
-    @GetMapping("categories/edit/{id}")
+    @GetMapping("/categories/edit/{id}")
     public String editCategory(@PathVariable("id") Integer id, Model model,
                                RedirectAttributes redirectAttributes) throws CategoryNotFoundException {
         try {
@@ -117,7 +117,7 @@ public class CategoryController {
 
     }
 
-    @GetMapping("categories/{id}/enabled/{status}")
+    @GetMapping("/categories/{id}/enabled/{status}")
     public String updateCategoryEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled,
                                               RedirectAttributes redirectAttributes) {
         categoryService.updateCategoryEnabledStatus(id, enabled);
@@ -128,7 +128,7 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-    @GetMapping("categories/delete/{id}")
+    @GetMapping("/categories/delete/{id}")
     public String deleteCategory(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             categoryService.delete(id);

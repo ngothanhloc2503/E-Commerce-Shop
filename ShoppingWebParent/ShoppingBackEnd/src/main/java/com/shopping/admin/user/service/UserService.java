@@ -1,5 +1,6 @@
 package com.shopping.admin.user.service;
 
+import com.shopping.admin.paging.PagingAndSortingHelper;
 import com.shopping.admin.user.UserNotFoundException;
 import com.shopping.admin.user.repository.RoleRepository;
 import com.shopping.admin.user.repository.UserRepository;
@@ -39,16 +40,8 @@ public class UserService {
         return (List<User>) userRepository.findAll();
     }
 
-    public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
-        Sort sort = Sort.by(sortField);
-        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-
-        Pageable pageable = PageRequest.of(pageNum - 1, USER_PER_PAGE, sort);
-        if (keyword != null) {
-            return userRepository.findAll(keyword, pageable);
-        }
-
-        return userRepository.findAll(pageable);
+    public void listByPage(int pageNum, PagingAndSortingHelper helper) {
+        helper.listEntities(pageNum, USER_PER_PAGE, userRepository);
     }
 
     public List<Role> listRole() {

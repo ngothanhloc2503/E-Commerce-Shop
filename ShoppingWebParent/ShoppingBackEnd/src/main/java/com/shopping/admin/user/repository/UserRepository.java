@@ -1,5 +1,6 @@
 package com.shopping.admin.user.repository;
 
+import com.shopping.admin.paging.SearchRepository;
 import com.shopping.common.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer>,
-        PagingAndSortingRepository<User, Integer> {
+        SearchRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.email = :email")
     public User getUserByEmail(@Param("email") String email);
 

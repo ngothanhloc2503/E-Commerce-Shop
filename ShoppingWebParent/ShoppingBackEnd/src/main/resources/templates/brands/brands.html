@@ -12,17 +12,17 @@
             <a th:href="@{/brands/export/csv}" class="fa-solid fa-file-csv fa-2xl icon-dark" style="text-decoration:none"></a>
         </div>
 
-        <div th:replace="fragments :: search_form_and_message('/brands/page/1')"></div>
+        <div th:replace="fragments :: search_form_and_message"></div>
 
         <div class="full-details">
             <table class="table table-bordered table-responsive-xl">
                 <thead class="table-dark">
                 <tr>
                     <th class="hideable-column">
-                        <th th:replace="fragments :: column_link('/brands', 'id', 'Brand ID', 'tag')"></th>
+                        <th th:replace="fragments :: column_link('id', 'Brand ID', 'tag')"></th>
                     </th>
                     <th>Logo</th>
-                    <th th:replace="fragments :: column_link('/brands', 'name', 'Brand Name', 'none')"></th>
+                    <th th:replace="fragments :: column_link('name', 'Brand Name', 'none')"></th>
                     <th>Categories</th>
                     <th></th>
                 </tr>
@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments :: pagination('/brands', 'brands')"></div>
+    <div th:replace="fragments :: pagination('brands')"></div>
 
     <div th:replace="modal_fragments :: confirm_modal"></div>
     <div th:replace="fragments :: page_footer"></div>

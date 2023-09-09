@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head(${pageTitle}, 'none')"></head>
+<body>
+
+<div th:replace="navigation :: menu"></div>
+
+<div class="container-fluid">
+    <div class="text-center">
+        <h2>Manage Customers | [[${pageTitle}]]</h2>
+    </div>
+
+    <form th:action="@{/customers/save}" method="post" style="max-width: 800px; margin: auto"
+          th:object="${customer}"
+          onsubmit="return checkEmailCustomerUnique(this)">
+        <input type="hidden" th:field="*{id}">
+        <div class="border border-2 rounded p-4">
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">First Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" th:field="*{firstName}"
+                           required="required" minlength="2" maxlength="45"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Last Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" th:field="*{lastName}"
+                           required="required" minlength="2" maxlength="45"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">E-mail:</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" th:field="*{email}"
+                           required="required" minlength="8" maxlength="45"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Password:</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="Leave blank if you don't want to change password."
+                           th:field="*{password}" minlength="8" maxlength="64"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Phone Number:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" required="required"
+                           th:field="*{phoneNumber}" minlength="8" maxlength="15"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Address Line 1:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" required="required"
+                           th:field="*{addressLine1}" minlength="8" maxlength="64"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Address Line 2:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control"
+                           th:field="*{addressLine2}" minlength="8" maxlength="64"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">City:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" required="required"
+                           th:field="*{city}" minlength="3" maxlength="45"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Country:</label>
+                <div class="col-sm-8">
+                    <select class="form-select" th:field="*{country}">
+                        <th:block th:each="country : ${listCountries}">
+                        <option th:value="${country.id}">[[${country.name}]]</option>
+                        </th:block>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">State/Province:</label>
+                <div class="col-sm-8">
+                    <select class="form-select" id="state" name="state" th:with="state=*{state}">
+                        <option th:each="i : ${listStates}"
+                                th:value="${i.name}" th:text="${i.name}"
+                                th:selected="${i.name} == ${customer.state}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Postal Code:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" required="required"
+                           th:field="*{postalCode}" minlength="3" maxlength="10"/>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <input type="submit" value="Save" class="btn btn-primary"/>
+                <input type="button" value="Cancel" class="btn btn-secondary" id="btnCancel"/>
+            </div>
+        </div>
+    </form>
+    <div th:replace="modal_fragments :: modal_dialog"></div>
+</div>
+<div th:replace="fragments :: page_footer"></div>
+<script type="text/javascript">
+    var dropdownStatesByCountry;
+    moduleURL = "[[@{/customers}]]";
+
+    $(document).ready(function () {
+        dropdownStatesByCountry = $("#state");
+
+        $("#btnCancel").on("click", function () {
+            window.location = moduleURL;
+        })
+
+        $("#country").on("change", function () {
+            loadStatesByCountry();
+        })
+    })
+
+    function loadStatesByCountry() {
+        selectedCountryId = $("#country option:selected").val();
+        url = "[[@{/states/list_by_country/}]]" + selectedCountryId;
+
+        $.get(url, function (responseJson) {
+            dropdownStatesByCountry.empty();
+
+            $.each(responseJson, function (index, state) {
+                $("<option>").val(state.id).text(state.name).appendTo(dropdownStatesByCountry);
+            })
+        }).done(function () {
+
+        }).fail(function () {
+            showErrorModal("ERROR: Could not connect to server or server encountered an error!");
+        })
+    }
+    
+    function checkEmailCustomerUnique(form) {
+        url = moduleURL + "/check_email_unique";
+        customerId = $("#id").val();
+        customerEmail = $("#email").val();
+        csrfValue = $("input[name='_csrf']").val();
+
+        params = {id: customerId, email: customerEmail, _csrf: csrfValue};
+
+        $.post(url, params, function (response) {
+            if (response == "OK") {
+                form.submit();
+            } else if (response == "Duplicated") {
+                showWarningModal("There is another customer having same email " + customerEmail);
+            } else {
+                showErrorModal("Unknown response from the server");
+            }
+        }).fail(function () {
+            showErrorModal("Could connect to the server");
+        });
+
+        return false;
+    }
+
+    function showModalDialog(title, message) {
+        $('#modalTitle').text(title);
+        $('#modalBody').text(message);
+        $('#modalDialog').modal('show');
+    }
+
+    function showErrorModal(message) {
+        showModalDialog("Error", message)
+    }
+
+    function showWarningModal(message) {
+        showModalDialog("Warning", message)
+    }
+</script>
+</body>
+</html>

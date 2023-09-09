@@ -3,6 +3,8 @@ package com.shopping.admin.product.controller;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.brand.service.BrandService;
 import com.shopping.admin.category.service.CategoryService;
+import com.shopping.admin.paging.PagingAndSortingHelper;
+import com.shopping.admin.paging.PagingAndSortingParam;
 import com.shopping.admin.product.service.ProductService;
 import com.shopping.admin.security.ShoppingUserDetails;
 import com.shopping.common.entity.Brand;
@@ -47,43 +49,20 @@ public class ProductController {
     private CategoryService categoryService;
 
     @GetMapping("/products")
-    public String listAll(Model model) {
-        return listByPage(1, "id", "asc", null, 0, model);
+    public String listAll() {
+        return "redirect:/products/page/1?sortField=id&sortDir=asc&categoryId=0";
     }
 
     @GetMapping("/products/page/{numPage}")
-    public String listByPage(@PathVariable("numPage") Integer pageNum,
-                             @Param("sortField") String sortField,
-                             @Param("sortDir") String sortDir,
-                             @Param("keyword") String keyword,
-                             @Param("categoryId") Integer categoryId,
-                             Model model)  {
-        Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyword, categoryId);
-        List<Product> listProducts = page.getContent();
+    public String listByPage(
+            @PagingAndSortingParam(listName = "listProducts", moduleURL = "/products") PagingAndSortingHelper helper,
+            @PathVariable("numPage") Integer pageNum, Model model,
+            @Param("categoryId") Integer categoryId)  {
+        productService.listByPage(pageNum, helper, categoryId);
 
         List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
-        long startCount = (pageNum - 1) * productService.PRODUCT_PER_PAGE + 1;
-        long endCount = startCount + productService.PRODUCT_PER_PAGE - 1;
-
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
-
-        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-
         if (categoryId != null) model.addAttribute("categoryId", categoryId);
-
-        model.addAttribute("listProducts", listProducts);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", reverseSortDir);
         model.addAttribute("listCategories", listCategories);
 
         return "products/products";
@@ -115,7 +94,8 @@ public class ProductController {
                               @RequestParam(name = "imageIDs", required = false) String[] imageIDs,
                               @RequestParam(name = "imageNames", required = false) String[] imageNames,
                               @AuthenticationPrincipal ShoppingUserDetails loggedUser) throws IOException {
-        if (loggedUser.hasRole("Salesperson")) {
+        if (!loggedUser.hasRole("ADMIN") && !loggedUser.hasRole("Editor")
+                && loggedUser.hasRole("Salesperson")) {
             productService.saveProductPrice(product);
             redirectAttributes.addFlashAttribute("message", "The product has been saved successfully!");
 
