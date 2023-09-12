@@ -34,16 +34,16 @@
             <div>
                 List Price:
                 <span th:if="${product.discountPercent <= 0}">
-                    <div th:replace="product/product_fragment :: price_fragment(${product.price})"></div>
+                    <div th:replace="products/product_fragment :: price_fragment(${product.price})"></div>
                 </span>
                 <del th:if="${product.discountPercent > 0}"><span>
-                    <div th:replace="product/product_fragment :: price_fragment(${product.price})"></div>
+                    <div th:replace="products/product_fragment :: price_fragment(${product.price})"></div>
                 </span></del>
             </div>
             <div th:if="${product.discountPercent > 0}">
                 Price:
                 <span style="font-size: large; color: darkred">
-                    <div th:replace="product/product_fragment :: price_fragment(${product.discountPrice})"></div>
+                    <div th:replace="products/product_fragment :: price_fragment(${product.discountPrice})"></div>
                 </span>
                 ([[${#numbers.formatDecimal(product.discountPercent, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]% off)
             </div>
@@ -89,7 +89,7 @@
         </div>
     </div>
 </div>
-<div th:replace="product/images_carousel :: content"></div>
+<div th:replace="products/images_carousel :: content"></div>
 <div th:replace="navigation :: footer_menu"></div>
 
 <script type="text/javascript">

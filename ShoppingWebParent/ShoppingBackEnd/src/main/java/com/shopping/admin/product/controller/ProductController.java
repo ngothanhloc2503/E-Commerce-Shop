@@ -248,16 +248,24 @@ public class ProductController {
 
     @GetMapping("/products/edit/{id}")
     public String editProduct(@PathVariable("id") Integer id, Model model,
-                              RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes,
+                              @AuthenticationPrincipal ShoppingUserDetails loggedUser) {
         try {
             Product product = productService.get(id);
             List<Brand> listBrands = brandService.listBrands();
             Integer numberOfExistingExtraImages = product.getImages().size();
 
+            boolean isReadOnlyForSalesperson = false;
+            if (!loggedUser.hasRole("ADMIN") && !loggedUser.hasRole("Editor")
+                    && loggedUser.hasRole("Salesperson")) {
+                isReadOnlyForSalesperson = true;
+            }
+
             model.addAttribute("product", product);
             model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
             model.addAttribute("listBrands", listBrands);
             model.addAttribute("numberOfExistingExtraImages", numberOfExistingExtraImages);
+            model.addAttribute("isReadOnlyForSalesperson", isReadOnlyForSalesperson);
 
             return "products/product_form";
         } catch (ProductNotFoundException e) {

@@ -56,7 +56,6 @@ public class CustomerController {
         try {
             Customer customer = customerService.findById(customerId);
 
-            System.out.println(customer.getCountry());
             List<Country> listCountries = countryRepository.findAllByOrderByNameAsc();
             List<State> listStates = stateRepository.findByCountryOrderByNameAsc(customer.getCountry());
 

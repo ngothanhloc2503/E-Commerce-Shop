@@ -3,6 +3,9 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <div th:fragment="header_menu">
+    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+        <input type="submit" />
+    </form>
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-0">
         <a class="navbar-brand ms-3" th:href="@{/}">
             <img th:src="@{${SITE_LOGO}}">
@@ -21,15 +24,43 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="">Shipping &amp; Delivery</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="">Login</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" th:href="@{/register}">Register</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="">Contact</a>
-                </li>
+
+                <th:block sec:authorize="isAuthenticated()">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/}">Addresses</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/}">Questions</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/}">Reviews</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/}">Orders</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/}">Cart</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                           th:href="@{/account_details}"
+                           sec:authentication="principal.fullName"></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" id="logoutLink" href="">Logout</a>
+                        </div>
+                    </li>
+                </th:block>
+
+                <th:block sec:authorize="isAnonymous()">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/login}">Login</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/register}">Register</a>
+                    </li>
+                </th:block>
             </ul>
         </div>
     </nav>

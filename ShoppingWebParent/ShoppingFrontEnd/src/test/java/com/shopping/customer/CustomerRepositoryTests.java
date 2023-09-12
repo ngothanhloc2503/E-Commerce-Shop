@@ -1,5 +1,6 @@
 package com.shopping.customer;
 
+import com.shopping.common.entity.AuthenticationType;
 import com.shopping.common.entity.Country;
 import com.shopping.common.entity.Customer;
 import org.junit.jupiter.api.Test;
@@ -94,5 +95,15 @@ public class CustomerRepositoryTests {
 
         Customer customer = customerRepository.findById(id).get();
         assertThat(customer.isEnabled()).isTrue();
+    }
+
+    @Test
+    public void testUpdateAuthenticationType() {
+        Integer id = 1;
+        customerRepository.updateAuthenticationType(1, AuthenticationType.DATABASE);
+
+        Customer customer = customerRepository.findById(1).get();
+
+        assertThat(customer.getAuthenticationType()).isEqualTo(AuthenticationType.DATABASE);
     }
 }

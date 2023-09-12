@@ -56,7 +56,7 @@ public class CustomerService {
     public void save(Customer customer) {
         Customer customerInDB = customerRepository.findById(customer.getId()).get();
 
-        if (customer.getPassword().isBlank()) {
+        if (customer.getPassword().isEmpty()) {
             customer.setPassword(customerInDB.getPassword());
         } else {
             encodePassword(customer);
@@ -64,6 +64,9 @@ public class CustomerService {
 
         customer.setCreatedTime(customerInDB.getCreatedTime());
         customer.setEnabled(customerInDB.isEnabled());
+        customer.setVerificationCode(customerInDB.getVerificationCode());
+        customer.setAuthenticationType(customerInDB.getAuthenticationType());
+        customer.setResetPasswordToken(customerInDB.getResetPasswordToken());
 
         customerRepository.save(customer);
     }

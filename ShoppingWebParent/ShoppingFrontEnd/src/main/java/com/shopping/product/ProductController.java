@@ -56,7 +56,7 @@ public class ProductController {
             model.addAttribute("listCategoryParents", listCategoryParents);
             model.addAttribute("listProducts", listProducts);
 
-            return "product/products_by_category";
+            return "products/products_by_category";
         } catch (CategoryNotFoundException e) {
             return "error/404";
         }
@@ -72,7 +72,7 @@ public class ProductController {
             model.addAttribute("product", product);
             model.addAttribute("listCategoryParents", listCategoryParents);
 
-            return "product/product_detail";
+            return "products/product_detail";
         } catch (ProductNotFoundException e) {
             return "error/404";
         }
@@ -105,6 +105,6 @@ public class ProductController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("listResult", listResult);
 
-        return "product/search_result";
+        return "products/search_result";
     }
 }
