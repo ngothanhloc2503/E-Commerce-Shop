@@ -13,7 +13,7 @@ public class CustomerRestController {
     private CustomerService customerService;
 
     @PostMapping("/customers/check_email_unique")
-    public String checkEmailUnique(@Param("id") Integer id ,@Param("email") String email) {
+    public String checkEmailUnique(Integer id , String email) {
         return customerService.isEmailUnique(id, email) ? "OK" : "Duplicated";
     }
 }

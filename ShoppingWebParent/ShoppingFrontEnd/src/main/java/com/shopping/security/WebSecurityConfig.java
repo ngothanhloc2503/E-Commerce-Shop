@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,7 +54,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .requestMatchers("/account_details", "/account_details/save").authenticated()
+                .requestMatchers("/account_details", "/account_details/save", "/cart/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
@@ -71,7 +72,9 @@ public class WebSecurityConfig {
                 .and()
                     .rememberMe()
                     .key("E_Commerce_Shopping")
-                    .tokenValiditySeconds(30 * 24 * 60 * 60);
+                    .tokenValiditySeconds(30 * 24 * 60 * 60)
+                .and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
 
         return http.build();
     }

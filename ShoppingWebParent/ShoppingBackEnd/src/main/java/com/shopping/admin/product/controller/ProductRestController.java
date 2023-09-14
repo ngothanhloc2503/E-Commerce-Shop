@@ -12,7 +12,7 @@ public class ProductRestController {
     private ProductService productService;
 
     @PostMapping("/products/check_unique")
-    public String checkUnique(@Param("id") Integer id, @Param("name") String name) {
+    public String checkUnique(Integer id, String name) {
         return productService.checkUnique(id, name);
     }
 }

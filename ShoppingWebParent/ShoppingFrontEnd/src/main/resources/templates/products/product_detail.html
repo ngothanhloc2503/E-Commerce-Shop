@@ -53,14 +53,16 @@
         <div class="col-sm-2">
             <div>
                 <span th:if="${product.inStock}" class="text-success"><b>In Stock</b></span>
-                <span th:unless="${product.inStock}" class="text-success"><b>Out of Stock</b></span>
+                <span th:unless="${product.inStock}" class="text-danger"><b>Out of Stock</b></span>
             </div>
-            <div>
-                <input type="text" size="5" value="1">
-            </div>
-            <div class="mt-2">
-                <input type="button" value="Add to Cart" class="btn btn-primary">
-            </div>
+
+            <th:block th:if="${product.inStock}">
+                <div th:replace="cart/quantity_control :: quantity_control(1, ${product.id})"></div>
+                <div class="mt-2">
+                    <input type="button" value="Add to Cart"
+                           id="btnAddToCart" class="btn btn-primary">
+                </div>
+            </th:block>
         </div>
     </div>
 
@@ -90,10 +92,16 @@
     </div>
 </div>
 <div th:replace="products/images_carousel :: content"></div>
+<div th:replace="modal_fragments :: modal_dialog"></div>
 <div th:replace="navigation :: footer_menu"></div>
 
 <script type="text/javascript">
     bigImage = $("#bigImage");
+    contextPath = "[[@{/}]]";
+    productId = [[${product.id}]];
+
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
 
     $(document).ready(function () {
         $(".image-thumbnail").mouseover(function () {
@@ -112,5 +120,8 @@
         })
     })
 </script>
+<script th:src="@{/js/quantity_control.js}"></script>
+<script th:src="@{/js/common_modal.js}"></script>
+<script th:src="@{/js/add_to_cart.js}"></script>
 </body>
 </html>

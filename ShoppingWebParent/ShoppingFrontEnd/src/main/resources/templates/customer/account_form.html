@@ -179,20 +179,7 @@
             showErrorModal("ERROR: Could not connect to server or server encountered an error!");
         })
     }
-
-    function showModalDialog(title, message) {
-        $('#modalTitle').text(title);
-        $('#modalBody').text(message);
-        $('#modalDialog').modal('show');
-    }
-
-    function showErrorModal(message) {
-        showModalDialog("Error", message)
-    }
-
-    function showWarningModal(message) {
-        showModalDialog("Warning", message)
-    }
 </script>
+<script th:src="@{/js/common_modal.js}"></script>
 </body>
 </html>
