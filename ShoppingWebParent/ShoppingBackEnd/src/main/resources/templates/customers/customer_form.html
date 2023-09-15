@@ -119,37 +119,14 @@
 </div>
 <div th:replace="fragments :: page_footer"></div>
 <script type="text/javascript">
-    var dropdownStatesByCountry;
     moduleURL = "[[@{/customers}]]";
+    contextPath = "[[@{/}]]";
 
     $(document).ready(function () {
-        dropdownStatesByCountry = $("#state");
-
         $("#btnCancel").on("click", function () {
             window.location = moduleURL;
         })
-
-        $("#country").on("change", function () {
-            loadStatesByCountry();
-        })
     })
-
-    function loadStatesByCountry() {
-        selectedCountryId = $("#country option:selected").val();
-        url = "[[@{/states/list_by_country/}]]" + selectedCountryId;
-
-        $.get(url, function (responseJson) {
-            dropdownStatesByCountry.empty();
-
-            $.each(responseJson, function (index, state) {
-                $("<option>").val(state.id).text(state.name).appendTo(dropdownStatesByCountry);
-            })
-        }).done(function () {
-
-        }).fail(function () {
-            showErrorModal("ERROR: Could not connect to server or server encountered an error!");
-        })
-    }
     
     function checkEmailCustomerUnique(form) {
         url = moduleURL + "/check_email_unique";
@@ -188,5 +165,6 @@
         showModalDialog("Warning", message)
     }
 </script>
+<script th:src="@{/js/common_form_country_state.js}"></script>
 </body>
 </html>

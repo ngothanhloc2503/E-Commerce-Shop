@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head(${pageTitle}, 'none')">
+</head>
+<body>
+    <div th:replace="navigation :: menu"></div>
+    <div class="container-fluid">
+        <div>
+            <h2>Manage Shipping Rates | [[${pageTitle}]]</h2>
+        </div>
+
+        <form th:action="@{/shipping_rates/save}" method="post" style="max-width: 800px; margin: auto"
+              enctype="multipart/form-data"
+              th:object="${shippingRate}">
+            <input type="hidden" th:field="*{id}">
+            <div class="border border-2 rounded p-4">
+                <div class="mb-3 row">
+                    <label class="col-sm-4 col-form-label">Destination Country:</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" th:field="*{country}">
+                            <th:block th:each="c : ${listCountries}">
+                                <option th:value="${c.id}">[[${c.name}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-4 col-form-label">Destination State/Province:</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" th:field="*{state}" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-4 col-form-label">Shipping Rate (per DIM weigh):</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" th:field="*{rate}" required step="0.01" min="0">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-4 col-form-label">Days to deliver:</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" th:field="*{days}" required step="1" min="0">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-4 col-form-label">Cash On Deliver (COD):</label>
+                    <div class="col-sm-8 my-auto">
+                        <input type="checkbox" th:field="*{codSupported}">
+                    </div>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <input type="submit" value="Save" class="btn btn-primary m-3" />
+                    <input type="button" value="Cancel" class="btn btn-secondary" id="btnCancel"/>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div th:replace="modal_fragments :: modal_dialog"></div>
+    <div th:replace="fragments :: page_footer"></div>
+<script type="text/javascript">
+    moduleURL = "[[@{/shipping_rates}]]";
+    contextPath = "[[@{/}]]";
+
+    $(document).ready(function () {
+
+        $("#btnCancel").on("click", function () {
+            window.location = moduleURL;
+        })
+    })
+</script>
+<script th:src="@{/js/common_form_country_state.js}"></script>
+</body>
+</html>
