@@ -1,5 +1,6 @@
-package com.shopping.setting;
+package com.shopping.admin.setting;
 
+import com.shopping.admin.setting.service.SettingService;
 import com.shopping.common.entity.setting.Setting;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

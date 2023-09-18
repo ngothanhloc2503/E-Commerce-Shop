@@ -3,7 +3,7 @@ package com.shopping.admin.product;
 import com.shopping.admin.product.repository.ProductRepository;
 import com.shopping.common.entity.Brand;
 import com.shopping.common.entity.Category;
-import com.shopping.common.entity.Product;
+import com.shopping.common.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 
 @DataJpaTest(showSql = false)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

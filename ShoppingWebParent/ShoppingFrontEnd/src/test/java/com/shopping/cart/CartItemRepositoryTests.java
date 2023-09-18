@@ -2,7 +2,7 @@ package com.shopping.cart;
 
 import com.shopping.common.entity.CartItem;
 import com.shopping.common.entity.Customer;
-import com.shopping.common.entity.Product;
+import com.shopping.common.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

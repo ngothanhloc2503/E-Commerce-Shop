@@ -1,7 +1,7 @@
 package com.shopping.setting;
 
-import com.shopping.common.entity.Setting;
-import com.shopping.common.entity.SettingBag;
+import com.shopping.common.entity.setting.Setting;
+import com.shopping.common.entity.setting.SettingBag;
 
 import java.util.List;
 

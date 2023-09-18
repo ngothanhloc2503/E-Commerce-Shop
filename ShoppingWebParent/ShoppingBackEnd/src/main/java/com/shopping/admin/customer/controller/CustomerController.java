@@ -84,7 +84,7 @@ public class CustomerController {
     private String deleteCustomer(@PathVariable("customer_id") Integer id, RedirectAttributes redirectAttributes) {
         customerService.deleteById(id);
 
-        redirectAttributes.addFlashAttribute("message", "The customer has been saved deleted!");
+        redirectAttributes.addFlashAttribute("message", "The customer has been deleted!");
 
         return "redirect:/customers";
     }

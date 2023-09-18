@@ -1,7 +1,7 @@
 package com.shopping.setting;
 
-import com.shopping.common.entity.Setting;
-import com.shopping.common.entity.SettingCategory;
+import com.shopping.common.entity.setting.Setting;
+import com.shopping.common.entity.setting.SettingCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

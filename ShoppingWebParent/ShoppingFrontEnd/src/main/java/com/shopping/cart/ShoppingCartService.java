@@ -2,14 +2,13 @@ package com.shopping.cart;
 
 import com.shopping.common.entity.CartItem;
 import com.shopping.common.entity.Customer;
-import com.shopping.common.entity.Product;
+import com.shopping.common.entity.product.Product;
 import com.shopping.product.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional

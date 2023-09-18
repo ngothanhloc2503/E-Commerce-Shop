@@ -1,8 +1,8 @@
 package com.shopping.admin.setting;
 
 import com.shopping.admin.setting.repository.SettingRepository;
-import com.shopping.common.entity.Setting;
-import com.shopping.common.entity.SettingCategory;
+import com.shopping.common.entity.setting.Setting;
+import com.shopping.common.entity.setting.SettingCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -1,14 +1,12 @@
 package com.shopping.common.entity;
 
+import com.shopping.common.entity.product.Product;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cart_items")
-public class CartItem {
+public class CartItem extends IdBasedEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -34,14 +32,6 @@ public class CartItem {
         this.customer = customer;
         this.product = product;
         this.quantity = quantity;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Customer getCustomer() {

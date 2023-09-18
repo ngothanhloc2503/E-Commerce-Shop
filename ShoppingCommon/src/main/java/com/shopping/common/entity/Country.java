@@ -2,15 +2,11 @@ package com.shopping.common.entity;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "countries")
-public class Country {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Country extends IdBasedEntity{
 
     @Column(nullable = false, length = 64)
     private String name;
@@ -43,14 +39,6 @@ public class Country {
         this.name = name;
         this.code = code;
         this.states = states;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

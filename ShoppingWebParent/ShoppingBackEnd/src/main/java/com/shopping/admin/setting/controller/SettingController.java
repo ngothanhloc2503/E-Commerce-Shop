@@ -5,7 +5,7 @@ import com.shopping.admin.setting.GeneralSettingBag;
 import com.shopping.admin.setting.repository.CurrencyRepository;
 import com.shopping.admin.setting.service.SettingService;
 import com.shopping.common.entity.Currency;
-import com.shopping.common.entity.Setting;
+import com.shopping.common.entity.setting.Setting;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

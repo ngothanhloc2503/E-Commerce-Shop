@@ -1,18 +1,13 @@
 package com.shopping.common.entity;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "categories")
-public class Category {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Category extends IdBasedEntity{
 
     @Column(length = 128, nullable = false, unique = true)
     private String name;
@@ -109,14 +104,6 @@ public class Category {
     @OneToMany(mappedBy = "parent")
     @OrderBy("name asc")
     private Set<Category> children = new HashSet<>();
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

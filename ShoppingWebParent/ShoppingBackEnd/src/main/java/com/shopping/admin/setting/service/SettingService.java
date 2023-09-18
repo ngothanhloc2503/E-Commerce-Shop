@@ -1,10 +1,9 @@
 package com.shopping.admin.setting.service;
 
 import com.shopping.admin.setting.GeneralSettingBag;
-import com.shopping.admin.setting.repository.CurrencyRepository;
 import com.shopping.admin.setting.repository.SettingRepository;
-import com.shopping.common.entity.Setting;
-import com.shopping.common.entity.SettingCategory;
+import com.shopping.common.entity.setting.Setting;
+import com.shopping.common.entity.setting.SettingCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,17 @@ public class SettingService {
 
     public List<Setting> getAllSettings() {
         return (List<Setting>) settingRepository.findAll();
+    }
+
+    public List<Setting> getGeneralSettings() {
+        List<Setting> settings = new ArrayList<>();
+        List<Setting> generalSettings = settingRepository.findByCategory(SettingCategory.GENERAL);
+        List<Setting> currencySettings = settingRepository.findByCategory(SettingCategory.CURRENCY);
+
+        settings.addAll(generalSettings);
+        settings.addAll(currencySettings);
+
+        return settings;
     }
 
     public GeneralSettingBag getGeneralSettingBag() {

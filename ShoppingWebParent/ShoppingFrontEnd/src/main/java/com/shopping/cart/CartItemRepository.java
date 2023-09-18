@@ -2,7 +2,7 @@ package com.shopping.cart;
 
 import com.shopping.common.entity.CartItem;
 import com.shopping.common.entity.Customer;
-import com.shopping.common.entity.Product;
+import com.shopping.common.entity.product.Product;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

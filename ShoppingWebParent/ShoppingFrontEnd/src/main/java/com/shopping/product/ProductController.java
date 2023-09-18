@@ -2,7 +2,7 @@ package com.shopping.product;
 
 import com.shopping.category.CategoryService;
 import com.shopping.common.entity.Category;
-import com.shopping.common.entity.Product;
+import com.shopping.common.entity.product.Product;
 import com.shopping.common.exception.CategoryNotFoundException;
 import com.shopping.common.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
