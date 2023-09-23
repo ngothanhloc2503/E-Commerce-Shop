@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Checkout', 'none')"></head>
+<body>
+    <div th:replace="navigation :: header_menu"></div>
+
+    <div class="container-fluid">
+        <div class="text-center my-3">
+            <h1>Checkout</h1>
+        </div>
+
+        <div th:if="${message != null}" class="alert alert-success text-center mt-2">
+            [[${message}]]
+        </div>
+
+        <div class="row m-1">
+            <div class="col-sm-8">
+                <div class="row">
+                    <div class="card p-0">
+                        <div class="card-header">
+                            <span class="h5">Shipping information</span>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <b>Ship to:</b>
+                                <span>[[${shippingAddress}]]</span>
+                                <a th:href="@{/address_book(redirect=checkout)}">[Ship to another address]</a>
+                            </div>
+                            <div>
+                                <b>Days to deliver:</b>
+                                <span>[[${checkoutInfo.deliverDays}]] day(s)</span>
+                            </div>
+                            <div>
+                                <b>Days to deliver:</b>
+                                <span th:text="${#dates.format(checkoutInfo.deliverDate, 'E, dd MMM yyyy')}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="card p-0">
+                        <div class="card-header">
+                            <span class="h5">Payment Method</span>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${checkoutInfo.codSupported}">
+                                <form th:action="@{/place_order}" method="post">
+                                    <div>
+                                        <input id="radioCOD" name="paymentMethod" type="radio" value="COD"> Cash on Delivery (COD)
+                                        &nbsp;
+                                        <button class="btn btn-primary d-none" id="btnPlaceOrder" type="submit">Place Order with COD</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div id="paypal-button-container" class="mt-3"></div>
+                            <form th:action="@{/process_paypal_order}" method="post" id="paypalForm">
+                                <input type="hidden" name="orderId" id="orderId">
+                                <input type="hidden" name="paymentMethod" value="PAYPAL">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-auto">&nbsp;</div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="card p-0">
+                        <div class="card-header">
+                            <span class="h5">Order Summary</span>
+                        </div>
+                        <div class="card-body py-0">
+                            <table>
+                                <th:block th:each="item : ${cartItems}">
+                                    <tr class="border-bottom">
+                                        <td>[[${item.quantity}]] x </td>
+                                        <td width="75%">
+                                            <a th:href="@{'/p/' + ${item.product.alias}}" target="_blank">[[${item.product.shortName}]]</a>
+                                            <br>
+                                            <small>Ship: <div th:replace="fragments :: format_currency(${item.shippingCost})"></div></small>
+                                        </td>
+                                        <td>
+                                            <div th:replace="fragments :: format_currency(${item.product.price})"></div>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </table>
+                            <div class="row py-2">
+                                <div class="col">Product Total:</div>
+                                <div class="col">
+                                    <div th:replace="fragments :: format_currency(${checkoutInfo.productTotal})"></div>
+                                </div>
+                            </div>
+
+                            <div class="row py-2">
+                                <div class="col">Shipping Total:</div>
+                                <div class="col">
+                                    <div th:replace="fragments :: format_currency(${checkoutInfo.shippingCostTotal})"></div>
+                                </div>
+                            </div>
+
+                            <div class="row py-2">
+                                <div class="col">Payment Total:</div>
+                                <div class="col">
+                                    <b>
+                                        <div th:replace="fragments :: format_currency(${checkoutInfo.paymentTotal})"></div>
+                                    </b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div th:replace="navigation :: footer_menu"></div>
+<script th:src="@{https://www.paypal.com/sdk/js(client-id=${paypalClientId},currency=${currencyCode})}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#radioCOD").on("click", function () {
+            $("#btnPlaceOrder").removeClass("d-none");
+        })
+    });
+
+    function validateOrder(orderId) {
+        $("#orderId").val(orderId);
+        $("#paypalForm").submit();
+    }
+
+    paypal.Buttons({
+        enableStandardCardFields: true,
+        createOrder: function (data, actions) {
+            // set up a transaction
+            return actions.order.create({
+                intent: 'CAPTURE', // make payment immediately
+                payer: {
+                    name: {
+                        given_name: "[[${customer.firstName}]]",
+                        surname: "[[${customer.lastName}]]"
+                    },
+
+                    address: {
+                        address_line_1: "[[${customer.addressLine1}]]",
+                        address_line_2: "[[${customer.addressLine2}]]",
+                        admin_area_1: "[[${customer.state}]]",
+                        admin_area_2: "[[${customer.city}]]",
+                        postal_code: "[[${customer.postalCode}]]",
+                        country_code: "[[${customer.country.code}]]"
+                    },
+
+                    email_address: "[[${customer.email}]]",
+
+                    phone: {
+                        phone_type: "MOBILE",
+                        phone_number: {
+                            national_number: "[[${customer.phoneNumber}]]"
+                        }
+                    }
+                },
+
+                purchase_units: [{
+                    amount: {
+                        value: "[[${checkoutInfo.paymentTotalForPayPal}]]",
+                        currency_code: "[[${currencyCode}]]"
+                    }
+                }],
+
+                application_context: {
+                    shipping_preference: "NO_SHIPPING",
+                }
+            })
+        },
+
+        onApprove: function (data, actions) {
+            // buyer approved payment
+            return actions.order.capture().then(function (details) {
+                orderId = details.id;
+                validateOrder(orderId);
+            })
+        },
+
+        onCancel: function (data) {
+            // buyer cancelled payment
+            alert("Payment cancelled by the buyer");
+        },
+
+        onError: function (err) {
+            // error that prevents buyer from doing checkout
+            alert("Something wrong happened");
+        }
+    }).render("#paypal-button-container");
+</script>
+</body>
+</html>

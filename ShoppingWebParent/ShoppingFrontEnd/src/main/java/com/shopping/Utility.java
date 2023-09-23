@@ -1,6 +1,7 @@
 package com.shopping;
 
 import com.shopping.security.oauth.CustomerOAuth2User;
+import com.shopping.setting.CurrencySettingBag;
 import com.shopping.setting.EmailSettingBag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -8,6 +9,8 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Properties;
 
 public class Utility {
@@ -49,5 +52,37 @@ public class Utility {
         }
 
         return customerEmail;
+    }
+
+    public static String formatCurrency(float amount, CurrencySettingBag settingBag) {
+        String symbol = settingBag.getSymbol();
+        String symbolPosition = settingBag.getSymbolPosition();
+        String decimalPointType = settingBag.getDecimalPointType();
+        String thousandPointType = settingBag.getThousandPointType();
+        int decimalDigits = settingBag.getDecimalDigits();
+
+
+        String pattern = symbolPosition.equals("Before price") ? symbol : "";
+        pattern += "###,###";
+
+        if (decimalDigits > 0) {
+            pattern += ".";
+            for (int i = 0; i < decimalDigits; i++) {
+                pattern += "#";
+            }
+        }
+
+        pattern = symbolPosition.equals("After price") ? symbol : "";
+
+        char thousandSeparator = thousandPointType.equals("POINT") ? '.' : ',';
+        char decimalSeparator = decimalPointType.equals("POINT") ? '.' : ',';
+
+        DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+        decimalFormatSymbols.setDecimalSeparator(thousandSeparator);
+        decimalFormatSymbols.setGroupingSeparator(decimalSeparator);
+
+        DecimalFormat formatter = new DecimalFormat(pattern, decimalFormatSymbols);
+
+        return formatter.format(amount);
     }
 }

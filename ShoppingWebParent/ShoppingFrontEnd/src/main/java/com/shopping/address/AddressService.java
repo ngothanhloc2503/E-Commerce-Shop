@@ -19,6 +19,10 @@ public class AddressService {
     }
 
     public void save(Address address) {
+        if (address.getId() != null) {
+            Address addressInDB = addressRepository.findById(address.getId()).get();
+            address.setDefaultForShipping(addressInDB.isDefaultForShipping());
+        }
         addressRepository.save(address);
     }
 
@@ -36,6 +40,9 @@ public class AddressService {
         }
 
         addressRepository.setNonDefaultForOthers(addressId, customerId);
+    }
 
+    public Address getDefaultAddress(Customer customer) {
+        return addressRepository.findDefaultByCustomer(customer.getId());
     }
 }

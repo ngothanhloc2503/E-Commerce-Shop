@@ -64,12 +64,17 @@ public class AddressController {
     public String saveAddress(Address address, HttpServletRequest request,
                               RedirectAttributes redirectAttributes) {
         address.setCustomer(getAuthenticatedCustomer(request));
-
         addressService.save(address);
-
         redirectAttributes.addFlashAttribute("message", "The address has been saved successfully.");
 
-        return "redirect:/address_book";
+        String redirectOption = request.getParameter("redirect");
+        String redirectURL = "redirect:/address_book";
+
+        if ("checkout".equals(redirectOption)) {
+            redirectURL += "?redirect=checkout";
+        }
+
+        return redirectURL;
     }
 
     @GetMapping("/address_book/edit/{id}")
@@ -103,6 +108,15 @@ public class AddressController {
     public String setDefaultAddress(@PathVariable("id") Integer id, HttpServletRequest request) {
         addressService.setDefault(id, getAuthenticatedCustomer(request).getId());
 
-        return "redirect:/address_book";
+        String redirectOption = request.getParameter("redirect");
+        String redirectURL = "redirect:/address_book";
+
+        if ("cart".equals(redirectOption)) {
+            redirectURL = "redirect:/cart";
+        } else if ("checkout".equals(redirectOption)) {
+            redirectURL = "redirect:/checkout";
+        }
+
+        return redirectURL;
     }
 }

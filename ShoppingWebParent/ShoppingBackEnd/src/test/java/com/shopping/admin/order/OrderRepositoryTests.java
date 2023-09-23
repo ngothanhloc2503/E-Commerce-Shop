@@ -35,7 +35,7 @@ public class OrderRepositoryTests {
 
         Order mainOrder = new Order();
         mainOrder.setCustomer(customer);
-        mainOrder.setAddressFromCustomer(customer);
+        mainOrder.copyAddressFromCustomer();
 
         mainOrder.setShippingCost(10);
         mainOrder.setProductCost(product.getCost());
@@ -74,7 +74,7 @@ public class OrderRepositoryTests {
         Order mainOrder = new Order();
         mainOrder.setOrderTime(new Date());
         mainOrder.setCustomer(customer);
-        mainOrder.setAddressFromCustomer(customer);
+        mainOrder.copyAddressFromCustomer();
 
         OrderDetail orderDetail1 = new OrderDetail();
         orderDetail1.setProduct(product1);

@@ -10,6 +10,7 @@
     <form th:action="@{/account_details/save}" method="post" style="max-width: 800px; margin: auto"
           th:object="${customer}">
         <input type="hidden" th:field="*{id}">
+        <input type="hidden" name="redirect" th:value="${param.redirect}">
         <div class="text-center my-2">
             <h2>Your Account Details</h2>
         </div>
