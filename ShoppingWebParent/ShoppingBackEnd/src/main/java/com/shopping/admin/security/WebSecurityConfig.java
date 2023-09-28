@@ -70,7 +70,7 @@ public class WebSecurityConfig {
 
                 .requestMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
 
-                .requestMatchers("/customers/**", "/shipping/**", "/reports/**")
+                .requestMatchers("/customers/**", "/shipping/**", "/reports/**", "/get_shipping_cost")
                     .hasAnyAuthority("Admin", "Salesperson")
 
                 .requestMatchers("/orders/**")
@@ -87,6 +87,7 @@ public class WebSecurityConfig {
                     .rememberMe()
                     .key("E_Commerce_Shopping")
                     .tokenValiditySeconds(30 * 24 * 60 * 60); // 1 month
+            http.headers().frameOptions().sameOrigin();
         return http.build();
     }
 

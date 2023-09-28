@@ -3,6 +3,8 @@ package com.shopping.admin.order.service;
 import com.shopping.admin.order.OrderNotFoundException;
 import com.shopping.admin.order.repository.OrderRepository;
 import com.shopping.admin.paging.PagingAndSortingHelper;
+import com.shopping.admin.setting.repository.CountryRepository;
+import com.shopping.common.entity.Country;
 import com.shopping.common.entity.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,9 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private CountryRepository countryRepository;
 
     public List<Order> listAll() {
         return (List<Order>) orderRepository.findAll();
@@ -68,4 +73,18 @@ public class OrderService {
             throw new OrderNotFoundException("Could not find any order with ID " + id);
         }
     }
+
+    public List<Country> listAllCountries() {
+        return countryRepository.findAllByOrderByNameAsc();
+    }
+
+    public void save(Order orderInForm) {
+        Order orderInDB = orderRepository.findById(orderInForm.getId()).get();
+
+        orderInForm.setOrderTime(orderInDB.getOrderTime());
+        orderInForm.setCustomer(orderInDB.getCustomer());
+
+        orderRepository.save(orderInForm);
+    }
 }
+

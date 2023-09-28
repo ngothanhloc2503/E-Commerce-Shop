@@ -212,7 +212,24 @@
         </div>
 
         <div class="tab-pane" id="track" role="tabpanel">
-
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="orderTrack: ${order.orderTracks}">
+                        <tr>
+                            <td>[[${orderTrack.updatedTime}]]</td>
+                            <td>[[${orderTrack.status}]]</td>
+                            <td>[[${orderTrack.notes}]]</td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

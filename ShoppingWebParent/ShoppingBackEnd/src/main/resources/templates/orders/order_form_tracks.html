@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" th:remove="tag">
+    <div id="trackList">
+        <th:block th:each="track, status : ${order.orderTracks}">
+            <div class="row border rounded p-2 mb-2" th:id="'rowTrack' + ${status.count}"
+                 th:with="isTrackWithStatusNew = ${track.status.toString() == 'NEW'}">
+                <input type="hidden" name="trackId" th:value="${track.id}" class="hiddenTrackId">
+
+                <div class="col-2">
+                    <div class="divCountTrack">[[${status.count}]]</div>
+
+                    <th:block th:if="${!isTrackWithStatusNew}">
+                        <a class="fa-solid fa-trash icon-dark fa-lg linkRemoveTrack" href=""
+                           th:rowNumber="${status.count}"
+                           title="Delete this track" style="text-decoration:none"></a>
+                    </th:block>
+                </div>
+
+                <div class="col">
+                    <div class="row">
+                        <table>
+                            <tr>
+                                <td style="width: 10%">Time:</td>
+                                <td>
+                                    <input type="datetime-local" name="trackDate"
+                                           th:value="${track.updatedTimeOnForm}" class="form-control"
+                                           th:readonly="${isTrackWithStatusNew}"
+                                           th:required="${!isTrackWithStatusNew}" style="max-width: 300px" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td>
+                                    <th:block th:if="${isTrackWithStatusNew}">
+                                        <input type="hidden" name="trackStatus" value="NEW" />
+                                    </th:block>
+                                    <select name="trackStatus" class="form-select dropDownStatus" required style="max-width: 150px"
+                                            th:rowNumber="${status.count}" th:disabled="${isTrackWithStatusNew}"
+                                            th:id="${isTrackWithStatusNew ? 'trackStatusOptions' : ''}"
+                                            th:with="trackStatus = ${track.status}">
+                                        <th:block th:each="os : ${T(com.shopping.common.entity.order.OrderStatus).values()}">
+                                            <option th:value="${os}" th:text="${os}"
+                                                    th:selected="${os.toString() == trackStatus.toString()}"
+                                                    th:defaultDescription="${os.defaultDescription}" />
+                                        </th:block>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Notes:</td>
+                                <td>
+                                    <textarea rows="2" cols="10" class="form-control"
+                                              name="trackNotes" style="max-width: 300px"
+                                              th:id="'trackNote' + ${status.count}"
+                                              th:readonly="${isTrackWithStatusNew}" required>[[${track.notes}]]</textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <a href="" id="linkAddTrack" class="btn btn-success">Add a Track</a>
+</div>
+</body>
+</html>

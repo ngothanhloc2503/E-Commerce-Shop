@@ -8,4 +8,6 @@ import java.util.List;
 public interface CountryRepository extends CrudRepository<Country, Integer> {
 
     public List<Country> findAllByOrderByNameAsc();
+
+    public Country findByName(String countryName);
 }
