@@ -1,4 +1,8 @@
+var trackRecordCount;
+
 $(document).ready(function () {
+    trackRecordCount = $(".hiddenTrackId").length;
+
     $("#track").on("click", "#linkAddTrack", function (e) {
         e.preventDefault();
         generateTrackCode();
@@ -32,7 +36,8 @@ function updateTrackCountNumbers() {
 }
 
 function generateTrackCode() {
-    nextCount = $(".hiddenTrackId").length + 1;
+    nextCount = trackRecordCount + 1;
+    trackRecordCount++;
     rowId = "rowTrack" + nextCount;
     trackNoteId = "trackNote" + nextCount;
     currentDateTime = formatCurrentDateTime();
