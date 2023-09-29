@@ -38,46 +38,50 @@
                 </div>
             </div>
 
-            <div class="row mb-3" >
-                <label class="col-sm-3 col-form-label">Customer:</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" th:value="${order.customer.fullName}" readonly >
+            <th:block th:if="${isVisibleForAdminAndSalesPerson}">
+                <div class="row mb-3" >
+                    <label class="col-sm-3 col-form-label">Customer:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" th:value="${order.customer.fullName}" readonly >
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3" >
-                <label class="col-sm-3 col-form-label">Product Cost:</label>
-                <div class="col-sm-9">
-                    <div th:replace="fragments :: currency_input(${order.productCost})"></div>
+                <div class="row mb-3" >
+                    <label class="col-sm-3 col-form-label">Product Cost:</label>
+                    <div class="col-sm-9">
+                        <div th:replace="fragments :: currency_input(${order.productCost})"></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3" >
-                <label class="col-sm-3 col-form-label">Subtotal:</label>
-                <div class="col-sm-9">
-                    <div th:replace="fragments :: currency_input(${order.subtotal})"></div>
+                <div class="row mb-3" >
+                    <label class="col-sm-3 col-form-label">Subtotal:</label>
+                    <div class="col-sm-9">
+                        <div th:replace="fragments :: currency_input(${order.subtotal})"></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3" >
-                <label class="col-sm-3 col-form-label">Shipping Cost:</label>
-                <div class="col-sm-9 my-auto">
-                    <div th:replace="fragments :: currency_input(${order.shippingCost})"></div>
+                <div class="row mb-3" >
+                    <label class="col-sm-3 col-form-label">Shipping Cost:</label>
+                    <div class="col-sm-9 my-auto">
+                        <div th:replace="fragments :: currency_input(${order.shippingCost})"></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3" >
-                <label class="col-sm-3 col-form-label">Tax:</label>
-                <div class="col-sm-9 my-auto">
-                    <div th:replace="fragments :: currency_input(${order.tax})"></div>
+                <div class="row mb-3" >
+                    <label class="col-sm-3 col-form-label">Tax:</label>
+                    <div class="col-sm-9 my-auto">
+                        <div th:replace="fragments :: currency_input(${order.tax})"></div>
+                    </div>
                 </div>
-            </div>
+            </th:block>
 
             <div class="row mb-3" >
                 <label class="col-sm-3 col-form-label">Total:</label>
                 <div class="col-sm-9 my-auto">
                     <div th:replace="fragments :: currency_input(${order.tax})"></div>
-                    <div class="mt-2">TOTAL = Subtotal + Shipping Cost + Tax</div>
+                    <th:block th:if="${isVisibleForAdminAndSalesPerson}">
+                        <div class="mt-2">TOTAL = Subtotal + Shipping Cost + Tax</div>
+                    </th:block>
                 </div>
             </div>
 
@@ -116,6 +120,7 @@
                         <div class="col-sm-8">
                             <b>[[${orderDetail.product.name}]]</b>
                             <br>
+                            <th:block th:if="${isVisibleForAdminAndSalesPerson}">
                             Product Cost:
                             <div th:replace="fragments :: format_currency(${orderDetail.productCost})"></div>
                             <br>
@@ -126,6 +131,7 @@
                             <br>
                             Shipping Cost:
                             <div th:replace="fragments :: format_currency(${orderDetail.shippingCost})"></div>
+                            </th:block>
                         </div>
                     </div>
                 </th:block>

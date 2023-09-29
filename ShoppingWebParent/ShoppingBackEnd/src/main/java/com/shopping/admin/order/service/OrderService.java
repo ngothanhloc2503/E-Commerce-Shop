@@ -6,6 +6,8 @@ import com.shopping.admin.paging.PagingAndSortingHelper;
 import com.shopping.admin.setting.repository.CountryRepository;
 import com.shopping.common.entity.Country;
 import com.shopping.common.entity.order.Order;
+import com.shopping.common.entity.order.OrderStatus;
+import com.shopping.common.entity.order.OrderTrack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -85,6 +88,27 @@ public class OrderService {
         orderInForm.setCustomer(orderInDB.getCustomer());
 
         orderRepository.save(orderInForm);
+    }
+
+    public void updateStatus(Integer orderId, String status) {
+        Order orderInDB = orderRepository.findById(orderId).get();
+        OrderStatus statusToUpdate = OrderStatus.valueOf(status);
+
+        if (!orderInDB.hasStatus(statusToUpdate)) {
+            List<OrderTrack> orderTracks = orderInDB.getOrderTracks();
+
+            OrderTrack track = new OrderTrack();
+            track.setOrder(orderInDB);
+            track.setStatus(statusToUpdate);
+            track.setUpdatedTime(new Date());
+            track.setNotes(statusToUpdate.defaultDescription());
+
+            orderTracks.add(track);
+
+            orderInDB.setStatus(statusToUpdate);
+
+            orderRepository.save(orderInDB);
+        }
     }
 }
 

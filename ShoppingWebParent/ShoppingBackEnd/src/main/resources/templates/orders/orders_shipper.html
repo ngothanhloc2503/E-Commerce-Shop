@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Orders - Shopping Admin', 'none')">
+</head>
+<body>
+<div th:replace="navigation :: menu"></div>
+<div class="container-fluid">
+    <div>
+        <h2>Manage Orders</h2>
+    </div>
+
+    <form th:action="@{${moduleURL} + '/page/1'}" class="form-inline m-3"
+          style="display: inline-block; width: auto; vertical-align: middle;">
+        <input type="hidden" name="sortField" th:value="${sortField}">
+        <input type="hidden" name="sortDir" th:value="${sortDir}">
+
+        Filter:&nbsp;
+
+        <input type="search" th:value="${keyword}" name="keyword" placeholder="Type #number to search by Order ID"
+               class="form-control"
+               style="display: inline-block; width: 300px; vertical-align: middle;" required>
+        &nbsp;&nbsp;
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+            <i class="fa-solid fa-eraser"></i>
+        </button>
+    </form>
+
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+
+    <div class="align-items-center">
+        <th:block th:each="order : ${listOrders}">
+            <div class="card mb-3 mx-auto" style="max-width: 500px">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col my-auto">Order ID #[[${order.id}]]</div>
+                        <div class="col-auto float-end">
+                            <a class="fa-solid fa-file-alt fa-2x icon-green link-detail"
+                               th:href="@{'/orders/detail/' + ${order.id}}"
+                               title="View details of this order"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <i class="fas fa-user"></i>
+                        <b>&nbsp;[[${order.recipientName}]]</b>
+                    </div>
+                    <div>
+                        <i class="fas fa-home"></i>
+                        <span>[[${order.recipientAddress}]]</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone"></i>
+                        <span>[[${order.phoneNumber}]]</span>
+                    </div>
+                    <div th:if="${order.isCOD}">
+                        <span>COD: <b><div th:replace="fragments :: format_currency(${order.total})"></div></b></span>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div th:replace="orders/order_status_fragment :: content(${order.picked}, 'PICKED', 'fa-people-carry')"></div>
+                        <div th:replace="orders/order_status_fragment :: content(${order.shipping}, 'SHIPPING', 'fa-shipping-fast')"></div>
+                        <div th:replace="orders/order_status_fragment :: content(${order.delivered}, 'DELIVERED', 'fa-box-open')"></div>
+                        <div th:replace="orders/order_status_fragment :: content(${order.returned}, 'RETURNED', 'fa-undo')"></div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</div>
+
+<div class="modal fade" id="detailModal">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Confirmation</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <span id="confirmText"></span>
+            </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-success" id="btnYes" href="">Yes</a>
+                <button type="button" class="btn btn-danger" id="btnNo" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments :: pagination('orders')"></div>
+
+<div th:replace="fragments :: page_footer"></div>
+
+<script th:src="@{/js/common_list.js}"></script>
+<script th:src="@{/js/orders_shipper.js}"></script>
+<script type="text/javascript">
+    moduleURL = "[[@{/orders}]]";
+
+    csrfHeaderName = "[[${_csrf.headerName}]]";
+    csrfValue = "[[${_csrf.token}]]";
+
+    $(document).ready(function () {
+        $(".link-detail").on("click", function (e) {
+            e.preventDefault();
+            linkDetailURL = $(this).attr("href");
+            $("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
+        })
+    })
+</script>
+</body>
+</html>

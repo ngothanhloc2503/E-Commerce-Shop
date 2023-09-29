@@ -4,6 +4,7 @@ import com.shopping.admin.order.OrderNotFoundException;
 import com.shopping.admin.order.service.OrderService;
 import com.shopping.admin.paging.PagingAndSortingHelper;
 import com.shopping.admin.paging.PagingAndSortingParam;
+import com.shopping.admin.security.ShoppingUserDetails;
 import com.shopping.admin.setting.repository.CountryRepository;
 import com.shopping.admin.setting.repository.StateRepository;
 import com.shopping.common.entity.Country;
@@ -15,6 +16,7 @@ import com.shopping.common.entity.order.OrderTrack;
 import com.shopping.common.entity.product.Product;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,17 +49,30 @@ public class OrderController {
     @GetMapping("/orders/page/{pageNum}")
     public String listByPage(
             @PathVariable("pageNum") Integer pageNum,
-            @PagingAndSortingParam(listName = "listOrders", moduleURL = "/orders")PagingAndSortingHelper helper) {
+            @PagingAndSortingParam(listName = "listOrders", moduleURL = "/orders")PagingAndSortingHelper helper,
+            @AuthenticationPrincipal ShoppingUserDetails loggedUser) {
         orderService.listAll(pageNum, helper);
+
+        if (!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Salesperson")
+                && loggedUser.hasRole("Shipper")) {
+            return "orders/orders_shipper";
+        }
 
         return "orders/orders";
     }
 
     @GetMapping("/orders/detail/{id}")
-    public String orderDetails(@PathVariable("id") Integer orderId, Model model, RedirectAttributes redirectAttributes) {
+    public String orderDetails(@PathVariable("id") Integer orderId, Model model, RedirectAttributes redirectAttributes,
+                               @AuthenticationPrincipal ShoppingUserDetails loggedUser) {
         try {
             Order order = orderService.findById(orderId);
 
+            boolean isVisibleForAdminAndSalesPerson = false;
+            if (loggedUser.hasRole("Admin") || loggedUser.hasRole("Salesperson")) {
+                isVisibleForAdminAndSalesPerson = true;
+            }
+
+            model.addAttribute("isVisibleForAdminAndSalesPerson", isVisibleForAdminAndSalesPerson);
             model.addAttribute("order", order);
 
             return "orders/order_details_modal";
