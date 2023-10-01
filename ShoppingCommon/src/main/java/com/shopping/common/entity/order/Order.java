@@ -304,6 +304,11 @@ public class Order extends AbstractAddress {
     }
 
     @Transient
+    public boolean isProcessing() {
+        return hasStatus(OrderStatus.PROCESSING);
+    }
+
+    @Transient
     public boolean isPicked() {
         return hasStatus(OrderStatus.PICKED);
     }
@@ -321,6 +326,11 @@ public class Order extends AbstractAddress {
     @Transient
     public boolean isReturned() {
         return hasStatus(OrderStatus.RETURNED);
+    }
+
+    @Transient
+    public boolean isReturnRequested() {
+        return hasStatus(OrderStatus.RETURN_REQUESTED);
     }
 
     public boolean hasStatus(OrderStatus orderStatus) {

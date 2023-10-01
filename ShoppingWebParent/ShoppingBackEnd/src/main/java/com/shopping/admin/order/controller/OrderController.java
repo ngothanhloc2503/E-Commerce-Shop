@@ -1,6 +1,6 @@
 package com.shopping.admin.order.controller;
 
-import com.shopping.admin.order.OrderNotFoundException;
+import com.shopping.common.exception.OrderNotFoundException;
 import com.shopping.admin.order.service.OrderService;
 import com.shopping.admin.paging.PagingAndSortingHelper;
 import com.shopping.admin.paging.PagingAndSortingParam;
