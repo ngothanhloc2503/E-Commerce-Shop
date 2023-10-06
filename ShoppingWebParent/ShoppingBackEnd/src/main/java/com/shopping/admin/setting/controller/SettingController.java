@@ -1,9 +1,11 @@
 package com.shopping.admin.setting.controller;
 
+import com.shopping.admin.AmazonS3Util;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.setting.GeneralSettingBag;
 import com.shopping.admin.setting.repository.CurrencyRepository;
 import com.shopping.admin.setting.service.SettingService;
+import com.shopping.common.Constants;
 import com.shopping.common.entity.Currency;
 import com.shopping.common.entity.setting.Setting;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +42,7 @@ public class SettingController {
         }
 
         model.addAttribute("listCurrencies", listCurrencies);
+        model.addAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
 
         return "settings/settings";
     }
@@ -65,9 +68,9 @@ public class SettingController {
             String value = "/site-logo/" + fileName;
             settingBag.updateSiteLogo(value);
 
-            String uploadDir = "../site-logo/";
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            String uploadDir = "site-logo";
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         }
     }
 

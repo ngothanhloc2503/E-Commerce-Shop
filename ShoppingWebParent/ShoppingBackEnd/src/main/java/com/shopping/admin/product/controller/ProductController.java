@@ -1,5 +1,6 @@
 package com.shopping.admin.product.controller;
 
+import com.shopping.admin.AmazonS3Util;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.brand.service.BrandService;
 import com.shopping.admin.category.service.CategoryService;
@@ -37,6 +38,8 @@ import java.util.Set;
 
 @Controller
 public class ProductController {
+    private String defaultRedirectURL = "redirect:/products/page/1?sortField=id&sortDir=asc&categoryId=0";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
     @Autowired
     private ProductService productService;
@@ -49,7 +52,7 @@ public class ProductController {
 
     @GetMapping("/products")
     public String listAll() {
-        return "redirect:/products/page/1?sortField=id&sortDir=asc&categoryId=0";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/products/page/{numPage}")
@@ -79,6 +82,7 @@ public class ProductController {
         model.addAttribute("listBrands", listBrands);
         model.addAttribute("pageTitle", "Create New Product");
         model.addAttribute("numberOfExistingExtraImages", 0);
+        model.addAttribute("isReadOnlyForSalesperson", false);
 
         return "products/product_form";
     }
@@ -98,7 +102,7 @@ public class ProductController {
             productService.saveProductPrice(product);
             redirectAttributes.addFlashAttribute("message", "The product has been saved successfully!");
 
-            return "redirect:/products";
+            return defaultRedirectURL;
         }
 
         setMainImageName(product, mainImageMultipart);
@@ -114,28 +118,20 @@ public class ProductController {
 
         redirectAttributes.addFlashAttribute("message", "The product has been saved successfully!");
 
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 
     private void deleteExtraImagesWereRemovedOnForm(Product product) {
-        String extraImageDir = "../product-images/" + product.getId() + "/extras";
-        Path dirPath = Paths.get(extraImageDir);
+        String extraImageDir = "product-images/" + product.getId() + "/extras";
+        List<String> listObjectKeys = AmazonS3Util.listFolder(extraImageDir);
 
-        try {
-            Files.list(dirPath).forEach(file -> {
-                String fileName = file.toFile().getName();
+        for (String objectKey : listObjectKeys) {
+            int lastIndexOfSlash = objectKey.lastIndexOf("/");
+            String fileName = objectKey.substring(lastIndexOfSlash + 1, objectKey.length());
 
-                if (!product.containsImageName(fileName)) {
-                    try {
-                        Files.delete(file);
-                        LOGGER.info("Deleted extra image: " + fileName);
-                    } catch (IOException e) {
-                        LOGGER.error("Could not delete extra image: " + fileName);
-                    }
-                }
-            });
-        } catch (IOException e) {
-            LOGGER.error("Could not list directory: " + dirPath);
+            if (!product.containsImageName(fileName)) {
+                AmazonS3Util.deleteFile(objectKey);
+            }
         }
     }
 
@@ -173,21 +169,25 @@ public class ProductController {
                                   Product savedProduct) throws IOException {
         if (!mainImageMultipart.isEmpty()) {
             String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());
-            String uploadDir = "../product-images/" + savedProduct.getId();
+            String uploadDir = "product-images/" + savedProduct.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
+            List<String> listObjectKeys = AmazonS3Util.listFolder(uploadDir + "/");
+            for (String objectKey : listObjectKeys) {
+                if (!objectKey.contains("/extras")) {
+                    AmazonS3Util.deleteFile(objectKey);
+                }
+            }
 
-            FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultipart);
+            AmazonS3Util.uploadFile(uploadDir, fileName, mainImageMultipart.getInputStream());
         }
 
         if (extraImageMultipart.length > 0) {
-            String uploadDir = "../product-images/" + savedProduct.getId() + "/extras";
+            String uploadDir = "product-images/" + savedProduct.getId() + "/extras";
 
             for (MultipartFile multipartFile: extraImageMultipart) {
                 if (!multipartFile.isEmpty()) {
                     String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-                    FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                    AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
                 } else {
                     continue;
                 }
@@ -223,18 +223,15 @@ public class ProductController {
         String message = "The product ID " + id + " has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/products/delete/{id}")
     public String deleteProduct(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             productService.delete(id);
-
-            String productExtraImagesDir = "../product-images/" + id + "/extras";
-            FileUploadUtil.removeDir(productExtraImagesDir);
-            String productMainImageDir = "../product-images/" + id;
-            FileUploadUtil.removeDir(productMainImageDir);
+            String productImageDir = "product-images/" + id;
+            AmazonS3Util.removeFolder(productImageDir + "/");
 
             redirectAttributes.addFlashAttribute("message",
                     "The product ID " + id + " has been deleted successfully");
@@ -242,7 +239,7 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
 
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/products/edit/{id}")
@@ -270,7 +267,7 @@ public class ProductController {
         } catch (ProductNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/products/detail/{id}")
@@ -287,6 +284,6 @@ public class ProductController {
         } catch (ProductNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 }

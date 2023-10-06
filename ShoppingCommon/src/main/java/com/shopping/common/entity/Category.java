@@ -1,5 +1,6 @@
 package com.shopping.common.entity;
 
+import com.shopping.common.Constants;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -156,7 +157,7 @@ public class Category extends IdBasedEntity{
     @Transient
     public String getImagePath() {
         if (this.id == null) return "/images/image_thumbnail.png";
-        return "/category-images/" + this.id + "/" + this.image;
+        return Constants.S3_BASE_URI + "/category-images/" + this.id + "/" + this.image;
     }
 
     @Transient

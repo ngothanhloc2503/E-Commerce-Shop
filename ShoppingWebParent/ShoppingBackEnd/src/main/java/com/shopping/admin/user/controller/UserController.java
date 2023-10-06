@@ -1,5 +1,6 @@
 package com.shopping.admin.user.controller;
 
+import com.shopping.admin.AmazonS3Util;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.paging.PagingAndSortingHelper;
 import com.shopping.admin.paging.PagingAndSortingParam;
@@ -69,9 +70,8 @@ public class UserController {
             User savedUser = userService.save(user);
 
             String uploadDir = "user-photos/" + savedUser.getId();
-
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir + "/");
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
             userService.save(user);
@@ -111,7 +111,7 @@ public class UserController {
         try {
             userService.delete(id);
             String userDir = "user-photos/" + id;
-            FileUploadUtil.removeDir(userDir);
+            AmazonS3Util.removeFolder(userDir + "/");
 
             redirectAttributes.addFlashAttribute("message",
                     "The user ID " + id + " has been deleted successfully");

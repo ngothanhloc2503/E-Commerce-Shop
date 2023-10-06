@@ -1,5 +1,6 @@
 package com.shopping.admin.category.controller;
 
+import com.shopping.admin.AmazonS3Util;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.common.exception.CategoryNotFoundException;
 import com.shopping.admin.category.CategoryPageInfo;
@@ -85,10 +86,10 @@ public class CategoryController {
 
             Category savedCategory = categoryService.save(category);
 
-            String uploadDir = "../category-images/" + savedCategory.getId();
+            String uploadDir = "category-images/" + savedCategory.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir + "/");
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             categoryService.save(category);
         }
@@ -132,8 +133,8 @@ public class CategoryController {
     public String deleteCategory(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             categoryService.delete(id);
-            String categoryDir = "../category-images/" + id;
-            FileUploadUtil.removeDir(categoryDir);
+            String categoryDir = "category-images/" + id;
+            AmazonS3Util.removeFolder(categoryDir + "/");
 
             redirectAttributes.addFlashAttribute("message",
                     "The category ID " + id + " has been deleted successfully");

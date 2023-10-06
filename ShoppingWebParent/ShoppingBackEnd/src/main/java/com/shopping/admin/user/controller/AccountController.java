@@ -1,5 +1,6 @@
 package com.shopping.admin.user.controller;
 
+import com.shopping.admin.AmazonS3Util;
 import com.shopping.admin.FileUploadUtil;
 import com.shopping.admin.security.ShoppingUserDetails;
 import com.shopping.admin.user.service.UserService;
@@ -46,8 +47,8 @@ public class AccountController {
 
             String uploadDir = "user-photos/" + savedUser.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir + "/");
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
             userService.updateAccount(user);

@@ -1,5 +1,6 @@
 package com.shopping.common.entity.product;
 
+import com.shopping.common.Constants;
 import jakarta.persistence.*;
 
 @Entity
@@ -57,6 +58,6 @@ public class ProductImage {
 
     @Transient
     public String getImagePath() {
-        return "/product-images/" + product.getId() + "/extras/" + this.name;
+        return Constants.S3_BASE_URI + "/product-images/" + product.getId() + "/extras/" + this.name;
     }
 }

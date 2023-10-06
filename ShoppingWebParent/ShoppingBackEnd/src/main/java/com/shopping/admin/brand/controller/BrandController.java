@@ -1,18 +1,16 @@
 package com.shopping.admin.brand.controller;
 
-import com.shopping.admin.FileUploadUtil;
-import com.shopping.admin.paging.PagingAndSortingHelper;
-import com.shopping.admin.paging.PagingAndSortingParam;
-import com.shopping.common.exception.BrandNotFoundException;
+import com.shopping.admin.AmazonS3Util;
 import com.shopping.admin.brand.export.BrandCsvExporter;
 import com.shopping.admin.brand.service.BrandService;
 import com.shopping.admin.category.service.CategoryService;
+import com.shopping.admin.paging.PagingAndSortingHelper;
+import com.shopping.admin.paging.PagingAndSortingParam;
 import com.shopping.common.entity.Brand;
 import com.shopping.common.entity.Category;
+import com.shopping.common.exception.BrandNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -28,6 +26,7 @@ import java.util.List;
 
 @Controller
 public class BrandController {
+    private String defaultRedirectURL = "redirect:/brands/page/1?sortField=id&sortDir=asc";
 
     @Autowired
     private BrandService brandService;
@@ -37,7 +36,7 @@ public class BrandController {
 
     @GetMapping("/brands")
     public String listBrands() {
-        return "redirect:/brands/page/1?sortField=id&sortDir=asc";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/brands/page/{pageNum}")
@@ -68,17 +67,17 @@ public class BrandController {
             brand.setLogo(fileName);
 
             Brand savedBrand = brandService.save(brand);
-            String uploadDir = "../brand-logos/" + savedBrand.getId();
+            String uploadDir = "brand-logos/" + savedBrand.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir + "/");
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             brandService.save(brand);
         }
 
         redirectAttributes.addFlashAttribute("message", "The brand has been saved successfully!");
 
-        return "redirect:/brands";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/brands/edit/{id}")
@@ -95,7 +94,7 @@ public class BrandController {
             return "/brands/brand_form";
         } catch (BrandNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
-            return "redirect:/brands";
+            return defaultRedirectURL;
         }
     }
 
@@ -104,15 +103,15 @@ public class BrandController {
         try {
             brandService.deleteBrand(id);
 
-            String brandDir = "../brand-logos/" + id;
-            FileUploadUtil.removeDir(brandDir);
+            String brandDir = "brand-logos/" + id;
+            AmazonS3Util.removeFolder(brandDir + "/");
 
             redirectAttributes.addFlashAttribute("message",
                     "The brand ID " + id + " has been deleted successfully");
         } catch (BrandNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
-        return "redirect:/brands";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/brands/export/csv")
