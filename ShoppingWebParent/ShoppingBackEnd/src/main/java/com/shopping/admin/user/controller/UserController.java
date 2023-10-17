@@ -30,13 +30,14 @@ import java.util.List;
 
 @Controller
 public class UserController {
+    private String defaultRedirectURL = "redirect:/users/page/1?sortField=id&sortDir=asc";
 
     @Autowired
     private UserService userService;
 
     @GetMapping("/users")
     public String listAll() {
-        return "redirect:/users/page/1?sortField=id&sortDir=asc";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/page/{pageNum}")
@@ -101,7 +102,7 @@ public class UserController {
             return "users/user_form";
         } catch (UserNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
-            return "redirect:/users";
+            return defaultRedirectURL;
         }
     }
 
@@ -118,7 +119,7 @@ public class UserController {
         } catch (UserNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
-        return "redirect:/users";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/{id}/enabled/{status}")
@@ -130,7 +131,7 @@ public class UserController {
         String message = "The user ID " + id + " has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 
-        return "redirect:/users";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/export/csv")
