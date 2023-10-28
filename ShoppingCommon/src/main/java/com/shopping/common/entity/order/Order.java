@@ -52,6 +52,14 @@ public class Order extends AbstractAddress {
         this.id = id;
     }
 
+    public Order(Integer id, Date orderTime, float productCost, float subtotal, float total) {
+        this.id = id;
+        this.orderTime = orderTime;
+        this.productCost = productCost;
+        this.subtotal = subtotal;
+        this.total = total;
+    }
+
     public String getCountry() {
         return country;
     }
