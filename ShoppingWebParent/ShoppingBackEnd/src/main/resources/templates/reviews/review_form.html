@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head(${pageTitle}, 'none')"></head>
+<body>
+
+<div th:replace="navigation :: menu"></div>
+
+<div class="container-fluid">
+    <div>
+        <h2>Manage Review | [[${pageTitle}]]</h2>
+    </div>
+
+    <form th:action="@{/reviews/save}" method="post" style="margin: auto"
+          th:object="${review}">
+        <input type="hidden" th:field="*{id}">
+        <div class="border border-2 rounded p-3">
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Product:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:value="${review.product.name}" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Customer:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:value="${review.customer.fullName}" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Rating:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:value="${review.rating}" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Review Time:</label>
+                <div class="col-sm-10 my-auto">
+                    <span th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Headline:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{headline}">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Comment:</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" th:field="*{comment}"></textarea>
+                </div>
+            </div>
+
+            <div class="mb-3 text-center">
+                <input type="submit" value="Save" class="btn btn-primary m-3" />
+                <input type="button" value="Cancel" class="btn btn-secondary" id="btnCancel"/>
+            </div>
+        </div>
+    </form>
+    <div th:replace="fragments :: page_footer"></div>
+</div>
+<script type="text/javascript">
+    moduleURL = "[[@{/reviews}]]";
+
+    $(document).ready(function () {
+        $("#btnCancel").on("click", function () {
+            window.location = moduleURL;
+        })
+    })
+</script>
+</body>
+</html>
