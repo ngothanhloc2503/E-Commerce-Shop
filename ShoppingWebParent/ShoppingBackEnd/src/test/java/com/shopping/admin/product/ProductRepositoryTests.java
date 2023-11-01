@@ -116,4 +116,10 @@ public class ProductRepositoryTests {
 
         assertThat(savedProduct.getImages().size()).isEqualTo(3);
     }
+
+    @Test
+    public void testUpdateReviewCountAndAverageRating() {
+        Integer productId = 1;
+        productRepository.updateReviewCountAndAverageRating(productId);
+    }
 }

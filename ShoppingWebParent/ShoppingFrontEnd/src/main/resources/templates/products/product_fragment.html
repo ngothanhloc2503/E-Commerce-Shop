@@ -9,6 +9,19 @@
             <b>[[${product.shortName}]]</b>
         </a>
     </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <input type="text" class="product-detail-rating-star" dir="ltr" data-th-size="xs"
+                           th:value="${product.averageRating}">
+                </td>
+                <td>
+                    <small>[[${product.reviewCount}]]</small>
+                </td>
+            </tr>
+        </table>
+    </div>
     <div th:replace="products/product_fragment :: product_price"></div>
 </div>
 
