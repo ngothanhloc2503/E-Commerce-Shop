@@ -309,4 +309,9 @@ public class Product extends IdBasedEntity {
         }
         return this.price;
     }
+
+    @Transient
+    public String getURI() {
+        return "/p/" + this.alias;
+    }
 }

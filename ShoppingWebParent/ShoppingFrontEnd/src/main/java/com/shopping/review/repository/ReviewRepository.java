@@ -1,10 +1,13 @@
 package com.shopping.review.repository;
 
 import com.shopping.common.entity.Review;
+import com.shopping.common.entity.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
@@ -17,4 +20,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     @Query("SELECT r FROM Review r WHERE r.id = ?1 AND r.customer.id = ?2")
     public Review findByIdAAndCustomer(Integer id, Integer customerId);
+
+    public Page<Review> findByProduct(Product product, Pageable pageable);
 }

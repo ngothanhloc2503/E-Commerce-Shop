@@ -2,9 +2,11 @@ package com.shopping.product;
 
 import com.shopping.category.CategoryService;
 import com.shopping.common.entity.Category;
+import com.shopping.common.entity.Review;
 import com.shopping.common.entity.product.Product;
 import com.shopping.common.exception.CategoryNotFoundException;
 import com.shopping.common.exception.ProductNotFoundException;
+import com.shopping.review.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -23,6 +25,9 @@ public class ProductController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/c/{category_alias}")
     public String viewCategoryFirstPage(@PathVariable("category_alias") String alias, Model model) {
@@ -67,7 +72,9 @@ public class ProductController {
         try {
             Product product = productService.getProduct(alias);
             List<Category> listCategoryParents = categoryService.getCategoryParents(product.getCategory());
+            Page<Review> listReviews = reviewService.list3MostRecentReviewsByProduct(product);
 
+            model.addAttribute("listReviews", listReviews);
             model.addAttribute("pageTitle", product.getShortName());
             model.addAttribute("product", product);
             model.addAttribute("listCategoryParents", listCategoryParents);

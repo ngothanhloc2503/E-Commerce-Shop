@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <div class="row"><div class="col-12"><hr/></div></div>
+    <div class="row">
+        <h3 id="review">Customer Reviews:</h3>
+    </div>
+
+    <div class="row mx-1">
+        <div class="col-auto">
+            <input type="text" class="product-detail-rating-star" dir="ltr" data-size="md"
+                   th:value="${product.averageRating}">
+        </div>
+        <div class="col-auto mt-3">
+            <span id="ratingNumber">[[${product.averageRating}]]</span> of 5
+        </div>
+    </div>
+    <div class="row m-1">
+        <a th:href="@{'/ratings/' + ${product.alias}}">View all [[${product.reviewCount}]] ratings</a>
+    </div>
+
+    <div class="row"><div class="col-12"><hr/></div></div>
+
+    <div class="row m-2">
+        <div class="col">
+            <th:block th:each="review : ${listReviews}">
+                <div class="row">
+                    <input type="text" class="product-detail-rating-star" dir="ltr" data-size="xs"
+                           th:value="${review.rating}">
+                </div>
+                <div class="row m-1">
+                    <b>[[${review.headline}]]</b>
+                </div>
+                <div class="row m-1">
+                    <div>[[${review.comment}]]</div>
+                </div>
+                <div class="row ms-3">
+                    <small>[[${review.customer.fullName}]], [[${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}]]</small>
+                </div>
+
+                <div class="row"><div class="col"><hr/></div></div>
+            </th:block>
+        </div>
+    </div>
+</div>
+</body>
+</html>

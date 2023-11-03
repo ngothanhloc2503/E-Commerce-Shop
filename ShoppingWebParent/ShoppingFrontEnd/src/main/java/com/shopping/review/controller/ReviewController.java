@@ -3,8 +3,12 @@ package com.shopping.review.controller;
 import com.shopping.Utility;
 import com.shopping.common.entity.Customer;
 import com.shopping.common.entity.Review;
+import com.shopping.common.entity.product.Product;
+import com.shopping.common.exception.ProductNotFoundException;
 import com.shopping.common.exception.ReviewNotFoundException;
 import com.shopping.customer.CustomerService;
+import com.shopping.product.ProductRepository;
+import com.shopping.product.ProductService;
 import com.shopping.review.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ public class ReviewController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private ProductService productService;
 
     @GetMapping("/reviews")
     public String listFirstPage() {
@@ -77,6 +84,43 @@ public class ReviewController {
 
             return defaultRedirect;
         }
+    }
+
+    @GetMapping("/ratings/{productAlias}")
+    public String listProductByFirstPage(@PathVariable("productAlias") String productAlias, Model model) {
+        return listProductByPage(productAlias, model, 1, "reviewTime", "desc");
+    }
+
+    @GetMapping("/ratings/{productAlias}/page/{pageNum}")
+    public String listProductByPage(@PathVariable("productAlias") String productAlias, Model model,
+                                    @PathVariable("pageNum") int pageNum, String sortField, String sortDir) {
+        Product product = null;
+        try {
+            product = productService.getProduct(productAlias);
+        } catch (ProductNotFoundException e) {
+            return "error/404";
+        }
+
+        Page<Review> page = reviewService.listByProduct(product, pageNum, sortField, sortDir);
+        List<Review> listReviews = page.getContent();
+
+        int startCount = (pageNum - 1) * reviewService.REVIEW_PER_PAGE + 1;
+        int endCount = startCount + reviewService.REVIEW_PER_PAGE - 1;
+
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
+        model.addAttribute("product", product);
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", reverseSortDir);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("listReviews", listReviews);
+
+        return "reviews/reviews_product";
     }
 
     private Customer getAuthenticatedCustomer(HttpServletRequest request){
