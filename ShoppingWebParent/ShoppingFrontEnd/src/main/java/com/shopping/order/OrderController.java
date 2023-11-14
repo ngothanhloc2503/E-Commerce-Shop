@@ -1,9 +1,13 @@
 package com.shopping.order;
 
+import com.shopping.ControllerHelper;
 import com.shopping.Utility;
 import com.shopping.common.entity.Customer;
 import com.shopping.common.entity.order.Order;
+import com.shopping.common.entity.order.OrderDetail;
+import com.shopping.common.entity.product.Product;
 import com.shopping.customer.CustomerService;
+import com.shopping.review.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -21,7 +26,10 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
-    private CustomerService customerService;
+    private ReviewService reviewService;
+
+    @Autowired
+    private ControllerHelper controllerHelper;
 
     @GetMapping("/orders")
     public String listFirstPage() {
@@ -32,7 +40,7 @@ public class OrderController {
     public String listByPage(Model model, @PathVariable("pageNum") Integer pageNum,
                              String sortField, String sortDir, String keyword,
                              HttpServletRequest request) {
-        Customer customer = getAuthenticatedCustomer(request);
+        Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 
         Page<Order> page = orderService.listAll(customer.getId(), pageNum, sortField, sortDir, keyword);
         List<Order> listOrders = page.getContent();
@@ -57,21 +65,32 @@ public class OrderController {
         return "orders/orders";
     }
 
-    private Customer getAuthenticatedCustomer(HttpServletRequest request){
-        String customerEmail = Utility.getEmailOfAuthenticatedCustomer(request);
-        return customerService.getCustomerByEmail(customerEmail);
-    }
-
     @GetMapping("/orders/detail/{id}")
     public String orderDetails(@PathVariable("id") Integer orderId, Model model,
                                HttpServletRequest request) {
-        Customer customer = getAuthenticatedCustomer(request);
-
+        Customer customer = controllerHelper.getAuthenticatedCustomer(request);
         Order order = orderService.getOrder(orderId, customer);
+
+        setProductReviewableStatus(customer, order);
 
         model.addAttribute("order", order);
 
         return "orders/order_details_modal";
+    }
+
+    private void setProductReviewableStatus(Customer customer, Order order) {
+        Iterator<OrderDetail> iterator = order.getOrderDetails().iterator();
+        while (iterator.hasNext()) {
+            OrderDetail orderDetail = iterator.next();
+            Product product = orderDetail.getProduct();
+
+            boolean didCustomerReviewProduct = reviewService.didCustomerReviewProduct(customer, product.getId());
+            product.setReviewedByCustomer(didCustomerReviewProduct);
+
+            if (!didCustomerReviewProduct) {
+                product.setCustomerCanReview(reviewService.canCustomerReviewProduct(customer, product.getId()));
+            }
+        }
     }
 
 }

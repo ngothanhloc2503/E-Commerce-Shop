@@ -1,12 +1,17 @@
 package com.shopping.product;
 
+import com.shopping.ControllerHelper;
+import com.shopping.Utility;
 import com.shopping.category.CategoryService;
 import com.shopping.common.entity.Category;
+import com.shopping.common.entity.Customer;
 import com.shopping.common.entity.Review;
 import com.shopping.common.entity.product.Product;
 import com.shopping.common.exception.CategoryNotFoundException;
 import com.shopping.common.exception.ProductNotFoundException;
+import com.shopping.customer.CustomerService;
 import com.shopping.review.service.ReviewService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +33,9 @@ public class ProductController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private ControllerHelper controllerHelper;
 
     @GetMapping("/c/{category_alias}")
     public String viewCategoryFirstPage(@PathVariable("category_alias") String alias, Model model) {
@@ -68,11 +76,24 @@ public class ProductController {
     }
 
     @GetMapping("/p/{product_alias}")
-    public String viewProductDetail(@PathVariable("product_alias") String alias, Model model) {
+    public String viewProductDetail(@PathVariable("product_alias") String alias, Model model,
+                                    HttpServletRequest request) {
         try {
             Product product = productService.getProduct(alias);
             List<Category> listCategoryParents = categoryService.getCategoryParents(product.getCategory());
             Page<Review> listReviews = reviewService.list3MostRecentReviewsByProduct(product);
+
+            Customer customer = controllerHelper.getAuthenticatedCustomer(request);
+            if (customer != null) {
+                boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, product.getId());
+
+                if (customerReviewed) {
+                    model.addAttribute("customerReviewed", customerReviewed);
+                } else {
+                    boolean customerCanReview = reviewService.canCustomerReviewProduct(customer, product.getId());
+                    model.addAttribute("customerCanReview", customerCanReview);
+                }
+            }
 
             model.addAttribute("listReviews", listReviews);
             model.addAttribute("pageTitle", product.getShortName());

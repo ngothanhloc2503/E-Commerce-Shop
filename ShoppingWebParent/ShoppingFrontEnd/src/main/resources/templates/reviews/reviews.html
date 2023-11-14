@@ -28,8 +28,8 @@
                 <tr th:each="review : ${listReviews}">
                     <td>[[${review.id}]]</td>
                     <td>
-                        <a class="link-detail"
-                           th:href="@{'/products/detail/' + ${review.product.id}}">[[${review.product.shortName}]]</a>
+                        <a th:href="@{'/p/' + ${review.product.alias}}"
+                           target="_blank">[[${review.product.shortName}]]</a>
                     </td>
                     <td>[[${review.headline}]]</td>
                     <td>[[${review.rating}]] <i class="far fa-star"></i></td>

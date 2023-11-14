@@ -108,6 +108,15 @@
                             =
                             <div th:replace="fragments :: format_currency(${orderDetail.subtotal})"></div>
                             <br>
+
+                            <div th:if="${orderDetail.product.reviewedByCustomer}">
+                                <a th:href="@{'/reviews/page/1?sortField=reviewTime&sortDir=desc&keyword=' + ${#strings.substring(orderDetail.product.shortName, 0, 20)}}"
+                                   class="btn btn-warning" target="_blank">See Your Review</a>
+                            </div>
+                            <div th:if="${!orderDetail.product.reviewedByCustomer && orderDetail.product.customerCanReview}">
+                                <a th:href="@{'/write_review/product/' + ${orderDetail.product.id}}" class="btn btn-info">Write Review</a>
+                            </div>
+
                         </div>
                     </div>
                 </th:block>

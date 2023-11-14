@@ -15,7 +15,7 @@
 </head>
 <body>
 <a th:fragment="page_link(moduleURL, pageNum, label)" class="page-link"
-   th:href="@{${moduleURL} + '/page/' + ${pageNum} + ${keyword != null ? '?keyword=' + keyword : ''}}">
+   th:href="@{${moduleURL} + '/page/' + ${pageNum} + ${sortField != null ? '?sortField=' + sortField : ''} + ${sortDir != null ? '&sortDir=' + sortDir : ''} + ${keyword != null ? '?keyword=' + keyword : ''}}">
     [[${label}]]
 </a>
 

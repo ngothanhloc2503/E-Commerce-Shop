@@ -1,5 +1,6 @@
 package com.shopping.cart;
 
+import com.shopping.ControllerHelper;
 import com.shopping.Utility;
 import com.shopping.address.AddressService;
 import com.shopping.common.entity.Address;
@@ -31,9 +32,12 @@ public class ShoppingCartController {
     @Autowired
     private ShippingRateService shippingRateService;
 
+    @Autowired
+    private ControllerHelper controllerHelper;
+
     @GetMapping("/cart")
     public String viewCart(Model model, HttpServletRequest request) {
-        Customer customer = getAuthenticatedCustomer(request);
+        Customer customer = controllerHelper.getAuthenticatedCustomer(request);
         List<CartItem> cartItems = cartItemService.listCartItems(customer);
 
         float estimatedTotal = 0.0F;
@@ -57,10 +61,5 @@ public class ShoppingCartController {
         model.addAttribute("estimatedTotal", estimatedTotal);
 
         return "cart/shopping_cart";
-    }
-
-    private Customer getAuthenticatedCustomer(HttpServletRequest request){
-        String customerEmail = Utility.getEmailOfAuthenticatedCustomer(request);
-        return customerService.getCustomerByEmail(customerEmail);
     }
 }

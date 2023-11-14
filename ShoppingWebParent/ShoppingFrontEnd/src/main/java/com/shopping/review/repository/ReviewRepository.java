@@ -22,4 +22,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     public Review findByIdAAndCustomer(Integer id, Integer customerId);
 
     public Page<Review> findByProduct(Product product, Pageable pageable);
+
+    @Query("SELECT COUNT(r) FROM Review r WHERE r.customer.id = ?1 AND r.product.id = ?2")
+    public Long countByCustomerAndProduct(Integer customerId, Integer productId);
 }

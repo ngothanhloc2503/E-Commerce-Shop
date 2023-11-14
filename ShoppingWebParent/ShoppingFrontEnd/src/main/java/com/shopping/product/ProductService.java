@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class ProductService {
     public static final int PRODUCTS_PER_PAGE = 10;
@@ -30,6 +32,15 @@ public class ProductService {
         }
 
         return product;
+    }
+
+    public Product getProduct(Integer id) throws ProductNotFoundException {
+        try {
+            Product product = productRepository.findById(id).get();
+            return product;
+        } catch (NoSuchElementException e) {
+            throw new ProductNotFoundException("Could not find any product with id " + id);
+        }
     }
 
     public Page<Product> search(String keyword, int pageNum) {
