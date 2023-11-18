@@ -36,6 +36,13 @@
             </div>
 
             <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Votes:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:value="${review.votes}" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <label class="col-sm-2 col-form-label">Review Time:</label>
                 <div class="col-sm-10 my-auto">
                     <span th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}"></span>

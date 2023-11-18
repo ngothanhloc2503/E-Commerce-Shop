@@ -1,4 +1,4 @@
-package com.shopping.review.service;
+package com.shopping.review;
 
 import com.shopping.common.entity.Customer;
 import com.shopping.common.entity.Review;
@@ -7,7 +7,7 @@ import com.shopping.common.entity.product.Product;
 import com.shopping.common.exception.ReviewNotFoundException;
 import com.shopping.order.OrderDetailRepository;
 import com.shopping.product.ProductRepository;
-import com.shopping.review.repository.ReviewRepository;
+import com.shopping.review.ReviewRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,7 +66,7 @@ public class ReviewService {
     }
 
     public Page<Review> list3MostRecentReviewsByProduct(Product product) {
-        Sort sort = Sort.by("reviewTime").descending();
+        Sort sort = Sort.by("votes").descending();
 
         Pageable pageable = PageRequest.of(0, 3, sort);
 

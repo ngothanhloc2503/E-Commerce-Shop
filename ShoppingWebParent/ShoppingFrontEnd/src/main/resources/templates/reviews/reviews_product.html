@@ -18,6 +18,13 @@
         </div>
         <div class="col-sm-10">
             <div><h3>[[${product.name}]]</h3></div>
+
+            <div>
+                <a th:href="@{'/ratings/' + ${product.alias} + '/page/' + ${currentPage} + '?sortField=votes&sortDir=desc'}">Sort by most voted</a>
+                &nbsp;
+                <a th:href="@{'/ratings/' + ${product.alias} + '/page/' + ${currentPage} + '?sortField=reviewTime&sortDir=desc'}">Sort by most recent</a>
+            </div>
+
             <div class="row m-1">
                 <div class="col-auto">
                     <input type="text" class="product-detail-rating-star" dir="ltr" data-size="md"
@@ -33,32 +40,21 @@
         </div>
     </div>
 
-    <div class="row m-2">
-        <div class="col">
-            <th:block th:each="review : ${listReviews}">
-                <div class="row">
-                    <input type="text" class="product-detail-rating-star" dir="ltr" data-size="xs"
-                           th:value="${review.rating}">
-                </div>
-                <div class="row m-1">
-                    <b>[[${review.headline}]]</b>
-                </div>
-                <div class="row m-1">
-                    <div>[[${review.comment}]]</div>
-                </div>
-                <div class="row ms-3">
-                    <small>[[${review.customer.fullName}]], [[${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}]]</small>
-                </div>
+    <div th:replace="reviews/reviews_votes :: content"></div>
 
-                <div class="row"><div class="col"><hr/></div></div>
-            </th:block>
-        </div>
-    </div>
     <div th:replace="fragments :: pagination('/ratings/' + ${product.alias}, 'product')"></div>
 </div>
 
+<div th:replace="modal_fragments :: modal_dialog"></div>
 <div th:replace="navigation :: footer_menu"></div>
+
 <script type="text/javascript">
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
+
+    decimalSeparator = "[[${DECIMAL_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
+    thousandsSeparator = "[[${THOUSANDS_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
+
     $(document).ready(function () {
         formatRatingNumber();
     })
@@ -76,5 +72,8 @@
         $("#ratingNumber").text(formattedRatingNumber);
     }
 </script>
+<script th:src="@{/js/jquery.number.min.js}"></script>
+<script th:src="@{/js/common_modal.js}"></script>
+<script th:src="@{/js/review_vote.js}"></script>
 </body>
 </html>

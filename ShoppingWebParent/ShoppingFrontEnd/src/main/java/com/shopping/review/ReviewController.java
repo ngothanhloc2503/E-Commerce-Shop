@@ -1,16 +1,13 @@
-package com.shopping.review.controller;
+package com.shopping.review;
 
 import com.shopping.ControllerHelper;
-import com.shopping.Utility;
 import com.shopping.common.entity.Customer;
 import com.shopping.common.entity.Review;
 import com.shopping.common.entity.product.Product;
 import com.shopping.common.exception.ProductNotFoundException;
 import com.shopping.common.exception.ReviewNotFoundException;
-import com.shopping.customer.CustomerService;
-import com.shopping.product.ProductRepository;
 import com.shopping.product.ProductService;
-import com.shopping.review.service.ReviewService;
+import com.shopping.review.vote.ReviewVoteService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +26,9 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private ReviewVoteService voteService;
 
     @Autowired
     private ControllerHelper controllerHelper;
@@ -89,13 +89,15 @@ public class ReviewController {
     }
 
     @GetMapping("/ratings/{productAlias}")
-    public String listProductByFirstPage(@PathVariable("productAlias") String productAlias, Model model) {
-        return listProductByPage(productAlias, model, 1, "reviewTime", "desc");
+    public String listProductByFirstPage(@PathVariable("productAlias") String productAlias, Model model,
+                                         HttpServletRequest request) {
+        return listProductByPage(productAlias, model, 1, "reviewTime", "desc", request);
     }
 
     @GetMapping("/ratings/{productAlias}/page/{pageNum}")
     public String listProductByPage(@PathVariable("productAlias") String productAlias, Model model,
-                                    @PathVariable("pageNum") int pageNum, String sortField, String sortDir) {
+                                    @PathVariable("pageNum") int pageNum, String sortField, String sortDir,
+                                    HttpServletRequest request) {
         Product product = null;
         try {
             product = productService.getProduct(productAlias);
@@ -105,6 +107,11 @@ public class ReviewController {
 
         Page<Review> page = reviewService.listByProduct(product, pageNum, sortField, sortDir);
         List<Review> listReviews = page.getContent();
+
+        Customer customer = controllerHelper.getAuthenticatedCustomer(request);
+        if (customer != null) {
+            voteService.markReviewsVotedForProductByCustomer(listReviews, product.getId(), customer.getId());
+        }
 
         int startCount = (pageNum - 1) * reviewService.REVIEW_PER_PAGE + 1;
         int endCount = startCount + reviewService.REVIEW_PER_PAGE - 1;

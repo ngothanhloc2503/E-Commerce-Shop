@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" class="row m-2">
+    <div class="col">
+        <th:block th:each="review : ${listReviews}">
+            <div class="row">
+                <div class="col-auto">
+                    <input type="text" class="product-detail-rating-star" dir="ltr" data-size="xs"
+                           th:value="${review.rating}">
+                </div>
+                <div class="col-auto">
+                    <a class="linkVoteReview fa-thumbs-up" style="text-decoration: none"
+                       th:classappend="${review.upVotedByCurrentCustomer ? 'fas' : 'far'}"
+                       th:id="'linkVoteUp-' + ${review.id}"
+                       th:reviewId="${review.id}"
+                       th:href="@{'/vote_review/' + ${review.id} + '/up'}"></a>
+                </div>
+                <div class="col-auto">
+                    <span th:id="'voteCount-' + ${review.id}">[[${review.votes}]] Votes</span>
+                </div>
+                <div class="col-auto">
+                    <a class="linkVoteReview fa-thumbs-down" style="text-decoration: none"
+                       th:classappend="${review.downVotedByCurrentCustomer ? 'fas' : 'far'}"
+                       th:id="'linkVoteDown-' + ${review.id}"
+                       th:reviewId="${review.id}"
+                       th:href="@{'/vote_review/' + ${review.id} + '/down'}"></a>
+                </div>
+            </div>
+            <div class="row m-1">
+                <b>[[${review.headline}]]</b>
+            </div>
+            <div class="row m-1">
+                <div>[[${review.comment}]]</div>
+            </div>
+            <div class="row ms-3">
+                <small>[[${review.customer.fullName}]], [[${#dates.format(review.reviewTime, 'yyyy-MM-dd
+                    HH:mm:ss')}]]</small>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <hr/>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>

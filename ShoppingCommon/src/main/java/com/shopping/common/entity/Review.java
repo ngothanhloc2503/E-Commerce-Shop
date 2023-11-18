@@ -4,10 +4,11 @@ import com.shopping.common.entity.product.Product;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "reviews")
-public class Review extends IdBasedEntity{
+public class Review extends IdBasedEntity {
 
     @Column(length = 128, nullable = false)
     private String headline;
@@ -16,6 +17,8 @@ public class Review extends IdBasedEntity{
     private String comment;
 
     private int rating;
+
+    private int votes;
 
     @Column(nullable = false)
     private Date reviewTime;
@@ -28,6 +31,12 @@ public class Review extends IdBasedEntity{
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @Transient
+    private boolean upVotedByCurrentCustomer;
+
+    @Transient
+    private boolean downVotedByCurrentCustomer;
+
     public Review() {
     }
 
@@ -38,6 +47,10 @@ public class Review extends IdBasedEntity{
         this.reviewTime = reviewTime;
         this.product = product;
         this.customer = customer;
+    }
+
+    public Review(Integer reviewId) {
+        this.id = reviewId;
     }
 
     public String getHeadline() {
@@ -88,6 +101,30 @@ public class Review extends IdBasedEntity{
         this.customer = customer;
     }
 
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
+
+    public boolean isUpVotedByCurrentCustomer() {
+        return upVotedByCurrentCustomer;
+    }
+
+    public void setUpVotedByCurrentCustomer(boolean upVotedByCurrentCustomer) {
+        this.upVotedByCurrentCustomer = upVotedByCurrentCustomer;
+    }
+
+    public boolean isDownVotedByCurrentCustomer() {
+        return downVotedByCurrentCustomer;
+    }
+
+    public void setDownVotedByCurrentCustomer(boolean downVotedByCurrentCustomer) {
+        this.downVotedByCurrentCustomer = downVotedByCurrentCustomer;
+    }
+
     @Override
     public String toString() {
         return "Review{id=" + id +
@@ -98,5 +135,18 @@ public class Review extends IdBasedEntity{
                 ", product=" + product.getShortName() +
                 ", customer=" + customer.getFullName() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Review review = (Review) o;
+        return Objects.equals(id, review.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

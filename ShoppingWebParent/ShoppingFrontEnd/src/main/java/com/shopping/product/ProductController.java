@@ -1,7 +1,6 @@
 package com.shopping.product;
 
 import com.shopping.ControllerHelper;
-import com.shopping.Utility;
 import com.shopping.category.CategoryService;
 import com.shopping.common.entity.Category;
 import com.shopping.common.entity.Customer;
@@ -9,8 +8,8 @@ import com.shopping.common.entity.Review;
 import com.shopping.common.entity.product.Product;
 import com.shopping.common.exception.CategoryNotFoundException;
 import com.shopping.common.exception.ProductNotFoundException;
-import com.shopping.customer.CustomerService;
-import com.shopping.review.service.ReviewService;
+import com.shopping.review.ReviewService;
+import com.shopping.review.vote.ReviewVoteService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +32,9 @@ public class ProductController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private ReviewVoteService voteService;
 
     @Autowired
     private ControllerHelper controllerHelper;
@@ -86,6 +88,7 @@ public class ProductController {
             Customer customer = controllerHelper.getAuthenticatedCustomer(request);
             if (customer != null) {
                 boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, product.getId());
+                voteService.markReviewsVotedForProductByCustomer(listReviews.getContent(), product.getId(), customer.getId());
 
                 if (customerReviewed) {
                     model.addAttribute("customerReviewed", customerReviewed);
