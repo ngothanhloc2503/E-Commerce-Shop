@@ -175,8 +175,6 @@ public class ReviewController {
             return "error/404";
         }
 
-        boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, product.getId());
-
         review.setCustomer(customer);
         review.setProduct(product);
 

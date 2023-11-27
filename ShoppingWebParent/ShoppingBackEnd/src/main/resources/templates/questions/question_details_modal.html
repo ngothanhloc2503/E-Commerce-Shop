@@ -1,0 +1,85 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modalTitle">Question Details</h4>
+    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+</div>
+
+<div class="m-3">
+    <div class="row mb-3">
+        <th:block th:unless="${question.approvalStatus}">
+            <span class="text-warning text-center">This question has not been approved.</span>
+        </th:block>
+        <th:block th:if="${question.approvalStatus}">
+            <span class="text-success text-center">This question was approved.</span>
+        </th:block>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Product:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" th:value="${question.product.name}" readonly>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Question:</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" th:utext="${question.questionContent}" readonly></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Asked by:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" th:value="${question.asker.fullName}" readonly>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Ask Time:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" th:value="${#dates.format(question.askTime, 'yyyy-MM-dd HH:mm:ss')}"
+                   readonly>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Votes:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" th:value="${question.votes}" readonly>
+        </div>
+    </div>
+
+
+    <th:block th:unless="${question.answered}">
+        <div class="row mb-3">
+            <span class="text-warning text-center">This question has not been answered.</span>
+        </div>
+    </th:block>
+    <th:block th:if="${question.answered}">
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Answer:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" th:utext="${question.answerContent}" readonly></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Answered by:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:value="${question.answerer.fullName}" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Answer Time:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:value="${#dates.format(question.answerTime, 'yyyy-MM-dd HH:mm:ss')}"
+                       readonly>
+            </div>
+        </div>
+    </th:block>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+</div>
